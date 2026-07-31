@@ -1,0 +1,71 @@
+name: sokuri-render-farm
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: render-farm
+  cancel-in-progress: false
+
+env:
+  SB: https://acnnkjddneyhdprlgeii.supabase.co
+  ANON: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjbm5ramRkbmV5aGRwcmxnZWlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0MTAyNzIsImV4cCI6MjA5ODk4NjI3Mn0.63J4tmLkCZEqwEuIWX7Liy_NFmIbsg2b5j7BEk5tRRs
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch worker from Supabase
+        run: |
+          mkdir -p render_worker
+          for f in common check_queue runner finish kit_render kit_bgm; do
+            curl -sfS -H "apikey: $ANON" -H "Authorization: Bearer $ANON" \
+              "$SB/rest/v1/reels_assets?select=content&name=eq.renderworker_$f" \
+            | python3 -c "import sys,json; rows=json.load(sys.stdin); assert rows, 'missing $f'; sys.stdout.write(rows[0]['content'])" \
+              > "render_worker/$f.py"
+            test -s "render_worker/$f.py" || { echo "empty $f"; exit 1; }
+          done
+
+      - name: Check queue
+        id: q
+        run: python3 render_worker/check_queue.py
+
+      - name: Install deps
+        if: steps.q.outputs.has_job == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-noto-cjk fonts-noto-color-emoji
+          pip -q install playwright numpy
+          python3 -m playwright install --with-deps chromium
+
+      - name: Render + encode
+        if: steps.q.outputs.has_job == 'true'
+        run: python3 render_worker/runner.py
+
+      - name: Commit video + QA frames
+        if: steps.q.outputs.has_job == 'true'
+        run: |
+          git config user.name "sokuri-render-bot"
+          git config user.email "render-bot@sokuri.app"
+          rm -rf render_worker
+          git add -A
+          git commit -m "render: $(cat /tmp/sokuri_output_name.txt)"
+          git push
+
+      - name: Storage ingest + mark done
+        if: steps.q.outputs.has_job == 'true'
+        run: |
+          mkdir -p render_worker
+          for f in common finish; do
+            curl -sfS -H "apikey: $ANON" -H "Authorization: Bearer $ANON" \
+              "$SB/rest/v1/reels_assets?select=content&name=eq.renderworker_$f" \
+            | python3 -c "import sys,json; sys.stdout.write(json.load(sys.stdin)[0]['content'])" \
+              > "render_worker/$f.py"
+          done
+          python3 render_worker/finish.py
+          rm -rf render_worker
