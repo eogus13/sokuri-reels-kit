@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --deeper:#191447; --ink:#07060F; --yellow:#FFD84D; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR','Liberation Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #s0{z-index:60;} #s1{z-index:20;} #wipe{z-index:30;} #s3{z-index:40;} #s4{z-index:50;} #vig{z-index:80;} #grain{z-index:81;}
+
+  /* S0 cover */
+  #s0{inset:0; background:radial-gradient(1700px 1500px at 50% 62%, #1C1740 0%, #07060F 68%);
+    animation: coverZoom 1.3s ease-out 0s both, coverOut .35s ease-in 1.3s both;}
+  @keyframes coverZoom{ from{transform:scale(1.05);} to{transform:scale(1);} }
+  @keyframes coverOut{ to{opacity:0;} }
+  #s0 .badge{top:60px; left:60px; display:flex; align-items:center; gap:22px;}
+  #s0 .badge .ic{width:110px;height:110px;border-radius:30px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:64px;}
+  #s0 .badge .nm{color:#fff;font-size:50px;font-weight:800;text-shadow:0 3px 14px rgba(0,0,0,.4);}
+  #s0 .t{top:250px; left:40px; right:40px; text-align:center; color:#fff; font-weight:900; font-size:92px; line-height:1.24; letter-spacing:-.02em;}
+  #s0 .t .hl{color:var(--yellow);}
+  #s0 .csub{top:640px; left:0; right:0; text-align:center; color:#A9A2DC; font-size:44px; font-weight:700;}
+  #s0 .teaser{left:40px; top:760px; width:1000px; height:1000px; opacity:.95;}
+  #s0 .teaser svg{width:100%;height:100%;}
+
+  /* 공용 폰 목업 */
+  .phone{width:720px; height:1020px; border-radius:48px; overflow:hidden; background:#0F0D1C;
+    box-shadow:0 60px 140px rgba(0,0,0,.72), 0 0 0 10px rgba(255,255,255,.09); position:relative;}
+  .phone .top{height:160px; background:linear-gradient(160deg,#221C4A,#161230); padding:36px 40px 0; position:relative;}
+  .phone .top .ttl{color:#fff; font-size:46px; font-weight:900; letter-spacing:-.01em;}
+  .phone .top .sub{color:#9A93C8; font-size:28px; font-weight:600; margin-top:8px;}
+  .lrow{display:flex; align-items:center; gap:24px; padding:24px 32px; border-bottom:2px solid #1B1830;}
+  .lrow .fv{width:74px;height:74px;border-radius:20px;background:#1C1834;display:flex;align-items:center;justify-content:center;font-size:36px;flex:0 0 auto;}
+  .lrow .tx .n{font-size:34px;font-weight:800;color:#E8E5F7;}
+  .lrow .tx .s{font-size:25px;font-weight:600;color:#6E6796;margin-top:6px;}
+
+  /* S1 flat list hell */
+  #s1{inset:0; background:linear-gradient(180deg,#100E1E 0%, #07060F 100%); animation: cam1 4.4s linear 1.5s both;}
+  @keyframes cam1{ from{transform:scale(1);} to{transform:scale(1.05);} }
+  #s1 .cap{position:absolute;left:0;right:0;top:150px;text-align:center;z-index:9;}
+  #s1 .cap .q{font-size:56px;font-weight:900;color:#fff;text-shadow:0 10px 44px rgba(0,0,0,.8);letter-spacing:-.01em;}
+  #s1 .ph{left:180px; top:470px;}
+  #s1 .feed{position:absolute; top:160px; left:0; right:0; bottom:0; overflow:hidden;}
+  #s1 .feed .inner{animation: feedScroll 4.6s cubic-bezier(.35,0,.5,1) 2.1s both;}
+  @keyframes feedScroll{ from{transform:translateY(0);} to{transform:translateY(-1560px);} }
+  #s1 .bar{position:absolute; right:16px; top:170px; width:9px; height:150px; border-radius:99px; background:#3A3360;
+    animation: barDrop 4.6s cubic-bezier(.35,0,.5,1) 2.1s both;}
+  @keyframes barDrop{ from{transform:translateY(0);} to{transform:translateY(690px);} }
+  #s1 .hell{ position:absolute;left:0;right:0;top:800px;text-align:center;z-index:12;padding:52px 0 58px;
+    background:linear-gradient(180deg, rgba(7,6,15,0) 0%, rgba(7,6,15,.95) 16%, rgba(7,6,15,.95) 84%, rgba(7,6,15,0) 100%);
+    animation: hellIn .45s cubic-bezier(.16,1.3,.3,1) 5.7s both; }
+  @keyframes hellIn{ from{opacity:0; transform:translateY(56px) scale(.82);} to{opacity:1; transform:translateY(0) scale(1);} }
+  #s1 .hell .h1{font-size:74px;font-weight:900;color:#fff;text-shadow:0 12px 50px rgba(0,0,0,.9);letter-spacing:-.02em;}
+  #s1 .hell .h2{font-size:46px;font-weight:700;color:#A9A2DC;margin-top:18px;text-shadow:0 8px 34px rgba(0,0,0,.9);}
+
+  #wipe{inset:0; background:radial-gradient(1500px 1500px at 50% 50%, var(--brand2) 0%, var(--brand) 38%, #120E33 100%);
+    clip-path:circle(0px at 540px 960px);
+    animation: wipeIn .7s cubic-bezier(.72,0,.2,1) 7.35s both;}
+  @keyframes wipeIn{ to{clip-path:circle(2350px at 540px 960px);} }
+
+  /* S3 graph view */
+  #s3{inset:0; opacity:0; background:radial-gradient(1500px 1400px at 50% 48%, #241B62 0%, #0A0820 72%);
+    animation: sIn .01s linear 7.78s both;}
+  @keyframes sIn{ to{opacity:1;} }
+  #s3 .headline{position:absolute;left:0;right:0;top:150px;text-align:center;z-index:6;}
+  #s3 .headline .h1{font-size:76px;font-weight:900;color:#fff;text-shadow:0 10px 40px rgba(10,5,40,.7);letter-spacing:-.02em;}
+  .w{display:inline-block; opacity:0; animation: wPop .32s cubic-bezier(.2,1.4,.35,1) both;}
+  @keyframes wPop{ from{opacity:0; transform:translateY(48px) scale(.82);} to{opacity:1; transform:translateY(0) scale(1);} }
+
+  /* List | Graph 토글 */
+  .toggle{position:absolute; left:50%; transform:translateX(-50%); top:290px; z-index:7; display:flex; gap:0;
+    background:rgba(255,255,255,.10); border:3px solid rgba(255,255,255,.24); border-radius:999px; padding:9px;
+    animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 7.85s both;}
+  .toggle div{font-size:42px; font-weight:800; color:#B9B2E8; padding:14px 46px; border-radius:999px;}
+  .toggle .on{color:#191447; background:var(--yellow); box-shadow:0 0 30px rgba(255,216,77,.5);
+    animation: onSwap .01s linear 8.0s both;}
+  @keyframes onSwap{ from{opacity:0;} to{opacity:1;} }
+  .toggle .off{animation: offSwap .01s linear 8.0s both;}
+  @keyframes offSwap{ from{color:#191447; background:var(--yellow);} to{color:#B9B2E8; background:transparent;} }
+
+  #gwrap{position:absolute; left:0; top:520px; width:1080px; height:1080px; z-index:5;
+    animation: gcam 5.4s ease-out 7.9s both;}
+  @keyframes gcam{ from{transform:scale(.88) rotate(-3deg);} to{transform:scale(1.15) rotate(0deg);} }
+  #gsvg{width:1080px;height:1080px; filter: drop-shadow(0 0 16px rgba(139,125,255,.5));}
+  .ed{stroke-width:3.4; opacity:.5; stroke-linecap:round; stroke-dasharray:520; stroke-dashoffset:520;
+    animation: edDraw .5s ease-out both;}
+  @keyframes edDraw{ to{stroke-dashoffset:0;} }
+  .nd{transform-box:fill-box; transform-origin:center; opacity:0;
+    animation: ndPop .4s cubic-bezier(.2,1.55,.35,1) both;}
+  @keyframes ndPop{ from{opacity:0; transform:scale(0);} to{opacity:.95; transform:scale(1);} }
+  .hb{transform-box:fill-box; transform-origin:center; opacity:0;
+    animation: hbPop .5s cubic-bezier(.2,1.55,.35,1) both;}
+  @keyframes hbPop{ from{opacity:0; transform:scale(0);} to{opacity:1; transform:scale(1);} }
+  .hublbl{font-family:'Noto Sans CJK KR','Liberation Sans',sans-serif; font-size:33px; font-weight:900; opacity:0;
+    paint-order:stroke; stroke:#0A0820; stroke-width:8px; stroke-linejoin:round;
+    animation: hlIn .38s ease-out both;}
+  @keyframes hlIn{ from{opacity:0;} to{opacity:1;} }
+
+  .steptag{position:absolute; z-index:9; left:0; right:0; top:1690px; text-align:center;}
+  .steptag span{display:inline-block; font-size:48px; font-weight:800; color:#fff;
+    background:rgba(10,8,32,.7); border:2.5px solid rgba(255,255,255,.3);
+    padding:18px 46px; border-radius:999px;}
+  #tagA{ animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 8.15s both, tagOut .3s ease-in 10.0s both; }
+  #tagB{ animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 10.2s both, tagOut .3s ease-in 11.85s both; }
+  #tagC{ animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 12.05s both; }
+  #tagC span{ background:rgba(255,216,77,.18); border-color:rgba(255,216,77,.85);
+    box-shadow:0 0 34px rgba(255,216,77,.35); }
+  @keyframes tagIn{ from{opacity:0; transform:translateY(46px) scale(.85);} to{opacity:1; transform:translateY(0) scale(1);} }
+  @keyframes tagOut{ to{opacity:0; transform:translateY(-20px);} }
+  .counter{position:absolute; z-index:9; left:0; right:0; top:1590px; text-align:center;
+    animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 11.6s both;}
+  .counter span{display:inline-block; font-size:38px; font-weight:800; color:#CFC9F5;}
+
+  /* S4 closing */
+  #s4{inset:0; background:linear-gradient(172deg,var(--brand) 0%, var(--deeper) 92%);
+    opacity:0; animation: sIn .4s ease-in 13.35s both;}
+  #s4 .big{position:absolute;left:0;right:0;top:500px;text-align:center;}
+  #s4 .big .b1{font-size:86px;font-weight:900;color:#fff;letter-spacing:-.02em; animation: tagIn .45s ease-out 13.55s both;}
+  #s4 .big .b2{font-size:38px;font-weight:700;color:#D9D4FF;margin-top:26px; animation: tagIn .45s ease-out 13.85s both;}
+  #s4 .tile{left:415px; top:840px; width:250px; height:250px; border-radius:58px; background:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:140px; overflow:hidden;
+    box-shadow:0 40px 100px rgba(8,4,40,.55);
+    animation: tileIn .55s cubic-bezier(.16,1.4,.3,1) 14.1s both, pulse 1.4s ease-in-out 14.8s infinite;}
+  #s4 .tile .shine{position:absolute; top:-40%; left:-80%; width:60%; height:180%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,.85), transparent);
+    transform:rotate(18deg); animation: shine 1s ease-in-out 14.6s both;}
+  @keyframes shine{ from{left:-80%;} to{left:130%;} }
+  @keyframes tileIn{ from{opacity:0; transform:scale(.5) rotate(-10deg);} to{opacity:1; transform:scale(1) rotate(0);} }
+  @keyframes pulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+  #s4 .url{position:absolute;left:0;right:0;top:1180px;text-align:center; animation: tagIn .45s ease-out 14.45s both;}
+  #s4 .url span{display:inline-block;background:rgba(255,255,255,.15);border:3px solid rgba(255,255,255,.4);
+    color:#fff;border-radius:999px;padding:22px 60px;font-size:54px;font-weight:900;}
+
+  #vig{inset:0;pointer-events:none;background:radial-gradient(1400px 1150px at 50% 44%, transparent 54%, rgba(0,0,0,.5) 100%);}
+  #grain{inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/></filter><rect width='220' height='220' filter='url(%23n)' opacity='0.8'/></svg>");}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <section id="s0" class="abs">
+    <div class="badge abs"><div class="ic">🧺</div><div class="nm">sokuri.app</div></div>
+    <div class="t abs">This is what<br><span class="hl">372 saved links</span><br>actually look like</div>
+    <div class="csub abs">(every other app just gives you a list)</div>
+    <div class="teaser abs">
+      <svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 22px rgba(139,125,255,.6))">
+        <g opacity=".9"><line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="398.5" y2="257.0" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="634.2" y2="174.1" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="463.2" y2="361.8" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="569.1" y2="130.5" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="552.7" y2="216.7" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="406.4" y2="155.5" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="592.9" y2="293.1" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="467.7" y2="202.0" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="491.4" y2="108.6" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="892.8" y2="418.5" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="850.6" y2="475.8" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="677.0" y2="436.9" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="809.5" y2="354.1" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="776.8" y2="283.6" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="765.2" y2="501.5" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="917.1" y2="352.0" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="865.6" y2="280.9" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="985.0" y2="723.5" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="977.3" y2="645.6" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="897.0" y2="872.6" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="893.5" y2="659.5" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="894.4" y2="793.5" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="977.6" y2="802.9" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="812.3" y2="814.4" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="427.0" y2="898.0" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="431.1" y2="816.2" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="436.1" y2="736.8" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="620.6" y2="930.5" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="549.1" y2="948.2" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="357.7" y2="889.9" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="535.2" y2="689.4" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="515.1" y2="878.1" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="464.4" y2="971.4" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="620.9" y2="844.2" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="607.2" y2="756.1" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="316.2" y1="595.9" x2="245.8" y2="609.6" stroke="#7FC4FF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="316.2" y1="595.9" x2="279.6" y2="686.6" stroke="#7FC4FF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="316.2" y1="595.9" x2="159.9" y2="674.7" stroke="#7FC4FF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="316.2" y1="595.9" x2="150.0" y2="596.9" stroke="#7FC4FF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="316.2" y1="595.9" x2="209.6" y2="735.9" stroke="#7FC4FF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="316.2" y1="595.9" x2="227.5" y2="538.4" stroke="#7FC4FF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="232.5" y1="341.4" x2="122.5" y2="384.0" stroke="#FFB27F"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="232.5" y1="341.4" x2="95.0" y2="310.3" stroke="#FFB27F"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="232.5" y1="341.4" x2="160.1" y2="267.2" stroke="#FFB27F"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="232.5" y1="341.4" x2="225.4" y2="400.5" stroke="#FFB27F"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="232.5" y1="341.4" x2="202.2" y2="211.2" stroke="#FFB27F"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="748.6" y2="425.6" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="852.2" y2="723.4" stroke="#7FE7C4"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="852.2" y1="723.4" x2="518.2" y2="783.4" stroke="#FF9BB3"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="518.2" y1="783.4" x2="316.2" y2="595.9" stroke="#8B7DFF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="316.2" y1="595.9" x2="232.5" y2="341.4" stroke="#7FC4FF"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="232.5" y1="341.4" x2="505.7" y2="290.4" stroke="#FFB27F"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="505.7" y1="290.4" x2="518.2" y2="783.4" stroke="#FFD84D"/>
+<line class="tz" stroke-width="3" opacity="0.35" x1="748.6" y1="425.6" x2="316.2" y2="595.9" stroke="#7FE7C4"/></g>
+        <g><circle class="tz" opacity="0.75" cx="398.5" cy="257.0" r="8.8" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="634.2" cy="174.1" r="8.4" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="463.2" cy="361.8" r="11.4" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="569.1" cy="130.5" r="8.3" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="552.7" cy="216.7" r="12.8" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="406.4" cy="155.5" r="13.2" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="592.9" cy="293.1" r="11.2" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="467.7" cy="202.0" r="11.5" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="491.4" cy="108.6" r="8.7" fill="#FFD84D"/>
+<circle class="tz" opacity="0.75" cx="892.8" cy="418.5" r="12.5" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="850.6" cy="475.8" r="10.8" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="677.0" cy="436.9" r="11.7" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="809.5" cy="354.1" r="11.1" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="776.8" cy="283.6" r="9.7" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="765.2" cy="501.5" r="9.2" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="917.1" cy="352.0" r="8.5" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="865.6" cy="280.9" r="8.3" fill="#7FE7C4"/>
+<circle class="tz" opacity="0.75" cx="985.0" cy="723.5" r="12.4" fill="#FF9BB3"/>
+<circle class="tz" opacity="0.75" cx="977.3" cy="645.6" r="11.8" fill="#FF9BB3"/>
+<circle class="tz" opacity="0.75" cx="897.0" cy="872.6" r="12.4" fill="#FF9BB3"/>
+<circle class="tz" opacity="0.75" cx="893.5" cy="659.5" r="8.2" fill="#FF9BB3"/>
+<circle class="tz" opacity="0.75" cx="894.4" cy="793.5" r="8.6" fill="#FF9BB3"/>
+<circle class="tz" opacity="0.75" cx="977.6" cy="802.9" r="10.7" fill="#FF9BB3"/>
+<circle class="tz" opacity="0.75" cx="812.3" cy="814.4" r="11.5" fill="#FF9BB3"/>
+<circle class="tz" opacity="0.75" cx="427.0" cy="898.0" r="11.2" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="431.1" cy="816.2" r="9.6" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="436.1" cy="736.8" r="9.8" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="620.6" cy="930.5" r="13.4" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="549.1" cy="948.2" r="10.3" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="357.7" cy="889.9" r="9.1" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="535.2" cy="689.4" r="8.5" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="515.1" cy="878.1" r="9.2" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="464.4" cy="971.4" r="12.2" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="620.9" cy="844.2" r="11.6" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="607.2" cy="756.1" r="9.6" fill="#8B7DFF"/>
+<circle class="tz" opacity="0.75" cx="245.8" cy="609.6" r="11.0" fill="#7FC4FF"/>
+<circle class="tz" opacity="0.75" cx="279.6" cy="686.6" r="9.8" fill="#7FC4FF"/>
+<circle class="tz" opacity="0.75" cx="159.9" cy="674.7" r="12.7" fill="#7FC4FF"/>
+<circle class="tz" opacity="0.75" cx="150.0" cy="596.9" r="11.3" fill="#7FC4FF"/>
+<circle class="tz" opacity="0.75" cx="209.6" cy="735.9" r="9.0" fill="#7FC4FF"/>
+<circle class="tz" opacity="0.75" cx="227.5" cy="538.4" r="9.2" fill="#7FC4FF"/>
+<circle class="tz" opacity="0.75" cx="122.5" cy="384.0" r="8.5" fill="#FFB27F"/>
+<circle class="tz" opacity="0.75" cx="95.0" cy="310.3" r="9.7" fill="#FFB27F"/>
+<circle class="tz" opacity="0.75" cx="160.1" cy="267.2" r="12.4" fill="#FFB27F"/>
+<circle class="tz" opacity="0.75" cx="225.4" cy="400.5" r="10.9" fill="#FFB27F"/>
+<circle class="tz" opacity="0.75" cx="202.2" cy="211.2" r="9.2" fill="#FFB27F"/></g>
+        <g><circle class="tz" opacity="0.9" cx="505.7" cy="290.4" r="30" fill="#FFD84D"/>
+<text class="tz" style="display:none" x="505.7" y="232.39999999999998" fill="#fff" text-anchor="middle">Japan trip</text>
+<circle class="tz" opacity="0.9" cx="748.6" cy="425.6" r="30" fill="#7FE7C4"/>
+<text class="tz" style="display:none" x="748.6" y="367.6" fill="#fff" text-anchor="middle">Design</text>
+<circle class="tz" opacity="0.9" cx="852.2" cy="723.4" r="30" fill="#FF9BB3"/>
+<text class="tz" style="display:none" x="852.2" y="665.4" fill="#fff" text-anchor="middle">Recipes</text>
+<circle class="tz" opacity="0.9" cx="518.2" cy="783.4" r="30" fill="#8B7DFF"/>
+<text class="tz" style="display:none" x="518.2" y="725.4" fill="#fff" text-anchor="middle">Read later</text>
+<circle class="tz" opacity="0.9" cx="316.2" cy="595.9" r="30" fill="#7FC4FF"/>
+<text class="tz" style="display:none" x="316.2" y="537.9" fill="#fff" text-anchor="middle">Workouts</text>
+<circle class="tz" opacity="0.9" cx="232.5" cy="341.4" r="30" fill="#FFB27F"/>
+<text class="tz" style="display:none" x="232.5" y="283.4" fill="#fff" text-anchor="middle">Gift ideas</text></g>
+      </svg>
+    </div>
+  </section>
+
+  <section id="s1" class="abs">
+    <div class="cap"><div class="q"><span class="w" style="animation-delay:1.7s">Everything you saved. One flat list.</span></div></div>
+    <div class="ph phone abs">
+      <div class="top"><div class="ttl">All links</div><div class="sub">372 links · sorted by date</div></div>
+      <div class="feed">
+        <div class="inner">
+          <div class="lrow"><div class="fv">☕</div><div class="tx"><div class="n">Tokyo cafe guide — 30 spots</div><div class="s">blog · 3 weeks ago</div></div></div>
+<div class="lrow"><div class="fv">📰</div><div class="tx"><div class="n">How to actually rest</div><div class="s">newsletter · 3 weeks ago</div></div></div>
+<div class="lrow"><div class="fv">📺</div><div class="tx"><div class="n">3 days in Kyoto</div><div class="s">video · a month ago</div></div></div>
+<div class="lrow"><div class="fv">🍜</div><div class="tx"><div class="n">The best chili oil recipe</div><div class="s">blog · a month ago</div></div></div>
+<div class="lrow"><div class="fv">🖌️</div><div class="tx"><div class="n">Grid systems, explained</div><div class="s">article · a month ago</div></div></div>
+<div class="lrow"><div class="fv">🛒</div><div class="tx"><div class="n">Standing desk — worth it?</div><div class="s">forum · a month ago</div></div></div>
+<div class="lrow"><div class="fv">📄</div><div class="tx"><div class="n">Reading list 2026</div><div class="s">doc · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🎁</div><div class="tx"><div class="n">Gift ideas under $30</div><div class="s">list · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🧠</div><div class="tx"><div class="n">Why your notes never stick</div><div class="s">essay · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🏋️</div><div class="tx"><div class="n">Kettlebell in 15 min</div><div class="s">video · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🎧</div><div class="tx"><div class="n">Color theory crash course</div><div class="s">article · 3 months ago</div></div></div>
+<div class="lrow"><div class="fv">🍜</div><div class="tx"><div class="n">Ramen broth, from scratch</div><div class="s">blog · 3 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Saved for later</div><div class="s">link · 3 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Interesting — read this</div><div class="s">link · 4 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Untitled link</div><div class="s">link · 4 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Read later (really)</div><div class="s">link · 5 months ago</div></div></div>
+<div class="lrow"><div class="fv">☕</div><div class="tx"><div class="n">Tokyo cafe guide — 30 spots</div><div class="s">blog · 3 weeks ago</div></div></div>
+<div class="lrow"><div class="fv">📰</div><div class="tx"><div class="n">How to actually rest</div><div class="s">newsletter · 3 weeks ago</div></div></div>
+<div class="lrow"><div class="fv">📺</div><div class="tx"><div class="n">3 days in Kyoto</div><div class="s">video · a month ago</div></div></div>
+<div class="lrow"><div class="fv">🍜</div><div class="tx"><div class="n">The best chili oil recipe</div><div class="s">blog · a month ago</div></div></div>
+<div class="lrow"><div class="fv">🖌️</div><div class="tx"><div class="n">Grid systems, explained</div><div class="s">article · a month ago</div></div></div>
+<div class="lrow"><div class="fv">🛒</div><div class="tx"><div class="n">Standing desk — worth it?</div><div class="s">forum · a month ago</div></div></div>
+<div class="lrow"><div class="fv">📄</div><div class="tx"><div class="n">Reading list 2026</div><div class="s">doc · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🎁</div><div class="tx"><div class="n">Gift ideas under $30</div><div class="s">list · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🧠</div><div class="tx"><div class="n">Why your notes never stick</div><div class="s">essay · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🏋️</div><div class="tx"><div class="n">Kettlebell in 15 min</div><div class="s">video · 2 months ago</div></div></div>
+<div class="lrow"><div class="fv">🎧</div><div class="tx"><div class="n">Color theory crash course</div><div class="s">article · 3 months ago</div></div></div>
+<div class="lrow"><div class="fv">🍜</div><div class="tx"><div class="n">Ramen broth, from scratch</div><div class="s">blog · 3 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Saved for later</div><div class="s">link · 3 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Interesting — read this</div><div class="s">link · 4 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Untitled link</div><div class="s">link · 4 months ago</div></div></div>
+<div class="lrow"><div class="fv">🔗</div><div class="tx"><div class="n">Read later (really)</div><div class="s">link · 5 months ago</div></div></div>
+        </div>
+      </div>
+      <div class="bar"></div>
+    </div>
+    <div class="hell">
+      <div class="h1">372 links. One scrollbar.</div>
+      <div class="h2">Good luck finding that one thing again 🌀</div>
+    </div>
+  </section>
+
+  <div id="wipe" class="abs"></div>
+
+  <section id="s3" class="abs">
+    <div class="headline">
+      <div class="h1"><span class="w" style="animation-delay:7.9s">Now tap</span> <span class="w" style="animation-delay:8.06s">Graph</span> </div>
+    </div>
+    <div class="toggle"><div class="off">List</div><div class="on">Graph</div></div>
+
+    <div id="gwrap">
+      <svg id="gsvg" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+        <g><line class="ed" x1="505.7" y1="290.4" x2="398.5" y2="257.0" stroke="#FFD84D" style="animation-delay:8.35s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="634.2" y2="174.1" stroke="#FFD84D" style="animation-delay:8.38s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="463.2" y2="361.8" stroke="#FFD84D" style="animation-delay:8.42s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="569.1" y2="130.5" stroke="#FFD84D" style="animation-delay:8.46s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="552.7" y2="216.7" stroke="#FFD84D" style="animation-delay:8.49s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="406.4" y2="155.5" stroke="#FFD84D" style="animation-delay:8.53s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="592.9" y2="293.1" stroke="#FFD84D" style="animation-delay:8.56s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="467.7" y2="202.0" stroke="#FFD84D" style="animation-delay:8.59s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="491.4" y2="108.6" stroke="#FFD84D" style="animation-delay:8.63s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="892.8" y2="418.5" stroke="#7FE7C4" style="animation-delay:8.66s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="850.6" y2="475.8" stroke="#7FE7C4" style="animation-delay:8.70s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="677.0" y2="436.9" stroke="#7FE7C4" style="animation-delay:8.73s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="809.5" y2="354.1" stroke="#7FE7C4" style="animation-delay:8.77s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="776.8" y2="283.6" stroke="#7FE7C4" style="animation-delay:8.80s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="765.2" y2="501.5" stroke="#7FE7C4" style="animation-delay:8.84s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="917.1" y2="352.0" stroke="#7FE7C4" style="animation-delay:8.88s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="865.6" y2="280.9" stroke="#7FE7C4" style="animation-delay:8.91s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="985.0" y2="723.5" stroke="#FF9BB3" style="animation-delay:8.95s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="977.3" y2="645.6" stroke="#FF9BB3" style="animation-delay:8.98s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="897.0" y2="872.6" stroke="#FF9BB3" style="animation-delay:9.02s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="893.5" y2="659.5" stroke="#FF9BB3" style="animation-delay:8.35s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="894.4" y2="793.5" stroke="#FF9BB3" style="animation-delay:8.38s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="977.6" y2="802.9" stroke="#FF9BB3" style="animation-delay:8.42s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="812.3" y2="814.4" stroke="#FF9BB3" style="animation-delay:8.46s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="427.0" y2="898.0" stroke="#8B7DFF" style="animation-delay:8.49s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="431.1" y2="816.2" stroke="#8B7DFF" style="animation-delay:8.53s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="436.1" y2="736.8" stroke="#8B7DFF" style="animation-delay:8.56s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="620.6" y2="930.5" stroke="#8B7DFF" style="animation-delay:8.59s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="549.1" y2="948.2" stroke="#8B7DFF" style="animation-delay:8.63s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="357.7" y2="889.9" stroke="#8B7DFF" style="animation-delay:8.66s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="535.2" y2="689.4" stroke="#8B7DFF" style="animation-delay:8.70s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="515.1" y2="878.1" stroke="#8B7DFF" style="animation-delay:8.73s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="464.4" y2="971.4" stroke="#8B7DFF" style="animation-delay:8.77s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="620.9" y2="844.2" stroke="#8B7DFF" style="animation-delay:8.80s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="607.2" y2="756.1" stroke="#8B7DFF" style="animation-delay:8.84s"/>
+<line class="ed" x1="316.2" y1="595.9" x2="245.8" y2="609.6" stroke="#7FC4FF" style="animation-delay:8.88s"/>
+<line class="ed" x1="316.2" y1="595.9" x2="279.6" y2="686.6" stroke="#7FC4FF" style="animation-delay:8.91s"/>
+<line class="ed" x1="316.2" y1="595.9" x2="159.9" y2="674.7" stroke="#7FC4FF" style="animation-delay:8.95s"/>
+<line class="ed" x1="316.2" y1="595.9" x2="150.0" y2="596.9" stroke="#7FC4FF" style="animation-delay:8.98s"/>
+<line class="ed" x1="316.2" y1="595.9" x2="209.6" y2="735.9" stroke="#7FC4FF" style="animation-delay:9.02s"/>
+<line class="ed" x1="316.2" y1="595.9" x2="227.5" y2="538.4" stroke="#7FC4FF" style="animation-delay:8.35s"/>
+<line class="ed" x1="232.5" y1="341.4" x2="122.5" y2="384.0" stroke="#FFB27F" style="animation-delay:8.38s"/>
+<line class="ed" x1="232.5" y1="341.4" x2="95.0" y2="310.3" stroke="#FFB27F" style="animation-delay:8.42s"/>
+<line class="ed" x1="232.5" y1="341.4" x2="160.1" y2="267.2" stroke="#FFB27F" style="animation-delay:8.46s"/>
+<line class="ed" x1="232.5" y1="341.4" x2="225.4" y2="400.5" stroke="#FFB27F" style="animation-delay:8.49s"/>
+<line class="ed" x1="232.5" y1="341.4" x2="202.2" y2="211.2" stroke="#FFB27F" style="animation-delay:8.53s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="748.6" y2="425.6" stroke="#FFD84D" style="animation-delay:8.56s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="852.2" y2="723.4" stroke="#7FE7C4" style="animation-delay:8.59s"/>
+<line class="ed" x1="852.2" y1="723.4" x2="518.2" y2="783.4" stroke="#FF9BB3" style="animation-delay:8.63s"/>
+<line class="ed" x1="518.2" y1="783.4" x2="316.2" y2="595.9" stroke="#8B7DFF" style="animation-delay:8.66s"/>
+<line class="ed" x1="316.2" y1="595.9" x2="232.5" y2="341.4" stroke="#7FC4FF" style="animation-delay:8.70s"/>
+<line class="ed" x1="232.5" y1="341.4" x2="505.7" y2="290.4" stroke="#FFB27F" style="animation-delay:8.73s"/>
+<line class="ed" x1="505.7" y1="290.4" x2="518.2" y2="783.4" stroke="#FFD84D" style="animation-delay:8.77s"/>
+<line class="ed" x1="748.6" y1="425.6" x2="316.2" y2="595.9" stroke="#7FE7C4" style="animation-delay:8.80s"/></g>
+        <g><circle class="nd" cx="398.5" cy="257.0" r="8.8" fill="#FFD84D" style="animation-delay:8.32s"/>
+<circle class="nd" cx="634.2" cy="174.1" r="8.4" fill="#FFD84D" style="animation-delay:8.37s"/>
+<circle class="nd" cx="463.2" cy="361.8" r="11.4" fill="#FFD84D" style="animation-delay:8.41s"/>
+<circle class="nd" cx="569.1" cy="130.5" r="8.3" fill="#FFD84D" style="animation-delay:8.46s"/>
+<circle class="nd" cx="552.7" cy="216.7" r="12.8" fill="#FFD84D" style="animation-delay:8.50s"/>
+<circle class="nd" cx="406.4" cy="155.5" r="13.2" fill="#FFD84D" style="animation-delay:8.54s"/>
+<circle class="nd" cx="592.9" cy="293.1" r="11.2" fill="#FFD84D" style="animation-delay:8.59s"/>
+<circle class="nd" cx="467.7" cy="202.0" r="11.5" fill="#FFD84D" style="animation-delay:8.64s"/>
+<circle class="nd" cx="491.4" cy="108.6" r="8.7" fill="#FFD84D" style="animation-delay:8.68s"/>
+<circle class="nd" cx="892.8" cy="418.5" r="12.5" fill="#7FE7C4" style="animation-delay:8.73s"/>
+<circle class="nd" cx="850.6" cy="475.8" r="10.8" fill="#7FE7C4" style="animation-delay:8.77s"/>
+<circle class="nd" cx="677.0" cy="436.9" r="11.7" fill="#7FE7C4" style="animation-delay:8.82s"/>
+<circle class="nd" cx="809.5" cy="354.1" r="11.1" fill="#7FE7C4" style="animation-delay:8.86s"/>
+<circle class="nd" cx="776.8" cy="283.6" r="9.7" fill="#7FE7C4" style="animation-delay:8.91s"/>
+<circle class="nd" cx="765.2" cy="501.5" r="9.2" fill="#7FE7C4" style="animation-delay:8.95s"/>
+<circle class="nd" cx="917.1" cy="352.0" r="8.5" fill="#7FE7C4" style="animation-delay:9.00s"/>
+<circle class="nd" cx="865.6" cy="280.9" r="8.3" fill="#7FE7C4" style="animation-delay:9.04s"/>
+<circle class="nd" cx="985.0" cy="723.5" r="12.4" fill="#FF9BB3" style="animation-delay:9.09s"/>
+<circle class="nd" cx="977.3" cy="645.6" r="11.8" fill="#FF9BB3" style="animation-delay:8.05s"/>
+<circle class="nd" cx="897.0" cy="872.6" r="12.4" fill="#FF9BB3" style="animation-delay:8.10s"/>
+<circle class="nd" cx="893.5" cy="659.5" r="8.2" fill="#FF9BB3" style="animation-delay:8.14s"/>
+<circle class="nd" cx="894.4" cy="793.5" r="8.6" fill="#FF9BB3" style="animation-delay:8.19s"/>
+<circle class="nd" cx="977.6" cy="802.9" r="10.7" fill="#FF9BB3" style="animation-delay:8.23s"/>
+<circle class="nd" cx="812.3" cy="814.4" r="11.5" fill="#FF9BB3" style="animation-delay:8.28s"/>
+<circle class="nd" cx="427.0" cy="898.0" r="11.2" fill="#8B7DFF" style="animation-delay:8.32s"/>
+<circle class="nd" cx="431.1" cy="816.2" r="9.6" fill="#8B7DFF" style="animation-delay:8.37s"/>
+<circle class="nd" cx="436.1" cy="736.8" r="9.8" fill="#8B7DFF" style="animation-delay:8.41s"/>
+<circle class="nd" cx="620.6" cy="930.5" r="13.4" fill="#8B7DFF" style="animation-delay:8.46s"/>
+<circle class="nd" cx="549.1" cy="948.2" r="10.3" fill="#8B7DFF" style="animation-delay:8.50s"/>
+<circle class="nd" cx="357.7" cy="889.9" r="9.1" fill="#8B7DFF" style="animation-delay:8.54s"/>
+<circle class="nd" cx="535.2" cy="689.4" r="8.5" fill="#8B7DFF" style="animation-delay:8.59s"/>
+<circle class="nd" cx="515.1" cy="878.1" r="9.2" fill="#8B7DFF" style="animation-delay:8.64s"/>
+<circle class="nd" cx="464.4" cy="971.4" r="12.2" fill="#8B7DFF" style="animation-delay:8.68s"/>
+<circle class="nd" cx="620.9" cy="844.2" r="11.6" fill="#8B7DFF" style="animation-delay:8.73s"/>
+<circle class="nd" cx="607.2" cy="756.1" r="9.6" fill="#8B7DFF" style="animation-delay:8.77s"/>
+<circle class="nd" cx="245.8" cy="609.6" r="11.0" fill="#7FC4FF" style="animation-delay:8.82s"/>
+<circle class="nd" cx="279.6" cy="686.6" r="9.8" fill="#7FC4FF" style="animation-delay:8.86s"/>
+<circle class="nd" cx="159.9" cy="674.7" r="12.7" fill="#7FC4FF" style="animation-delay:8.91s"/>
+<circle class="nd" cx="150.0" cy="596.9" r="11.3" fill="#7FC4FF" style="animation-delay:8.95s"/>
+<circle class="nd" cx="209.6" cy="735.9" r="9.0" fill="#7FC4FF" style="animation-delay:9.00s"/>
+<circle class="nd" cx="227.5" cy="538.4" r="9.2" fill="#7FC4FF" style="animation-delay:9.04s"/>
+<circle class="nd" cx="122.5" cy="384.0" r="8.5" fill="#FFB27F" style="animation-delay:9.09s"/>
+<circle class="nd" cx="95.0" cy="310.3" r="9.7" fill="#FFB27F" style="animation-delay:8.05s"/>
+<circle class="nd" cx="160.1" cy="267.2" r="12.4" fill="#FFB27F" style="animation-delay:8.10s"/>
+<circle class="nd" cx="225.4" cy="400.5" r="10.9" fill="#FFB27F" style="animation-delay:8.14s"/>
+<circle class="nd" cx="202.2" cy="211.2" r="9.2" fill="#FFB27F" style="animation-delay:8.19s"/></g>
+        <g><circle class="hb" cx="505.7" cy="290.4" r="30" fill="#FFD84D" style="animation-delay:7.95s"/>
+<text class="hublbl" x="505.7" y="232.39999999999998" fill="#fff" text-anchor="middle" style="animation-delay:8.45s">Japan trip</text>
+<circle class="hb" cx="748.6" cy="425.6" r="30" fill="#7FE7C4" style="animation-delay:8.01s"/>
+<text class="hublbl" x="748.6" y="367.6" fill="#fff" text-anchor="middle" style="animation-delay:8.51s">Design</text>
+<circle class="hb" cx="852.2" cy="723.4" r="30" fill="#FF9BB3" style="animation-delay:8.07s"/>
+<text class="hublbl" x="852.2" y="665.4" fill="#fff" text-anchor="middle" style="animation-delay:8.57s">Recipes</text>
+<circle class="hb" cx="518.2" cy="783.4" r="30" fill="#8B7DFF" style="animation-delay:8.13s"/>
+<text class="hublbl" x="518.2" y="725.4" fill="#fff" text-anchor="middle" style="animation-delay:8.63s">Read later</text>
+<circle class="hb" cx="316.2" cy="595.9" r="30" fill="#7FC4FF" style="animation-delay:8.19s"/>
+<text class="hublbl" x="316.2" y="537.9" fill="#fff" text-anchor="middle" style="animation-delay:8.69s">Workouts</text>
+<circle class="hb" cx="232.5" cy="341.4" r="30" fill="#FFB27F" style="animation-delay:8.25s"/>
+<text class="hublbl" x="232.5" y="283.4" fill="#fff" text-anchor="middle" style="animation-delay:8.75s">Gift ideas</text></g>
+      </svg>
+    </div>
+
+    <div class="counter"><span>6 folders · 13 tags · 372 links</span></div>
+    <div id="tagA" class="steptag"><span>① one tap: List → Graph</span></div>
+    <div id="tagB" class="steptag"><span>② your tags become hubs</span></div>
+    <div id="tagC" class="steptag"><span>③ you finally SEE what you saved 🤯</span></div>
+  </section>
+
+  <section id="s4" class="abs">
+    <div class="big">
+      <div class="b1">Your links, as a map.</div>
+      <div class="b2">Save in 1 second — AI tags it, the graph draws itself 🤫</div>
+    </div>
+    <div class="tile abs">🧺<div class="shine"></div></div>
+    <div class="url"><span>sokuri.app · free</span></div>
+  </section>
+
+  <div id="vig" class="abs"></div>
+  <div id="grain" class="abs"></div>
+</div>
+
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
