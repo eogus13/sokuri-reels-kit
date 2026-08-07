@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --ink:#0B0916; --yellow:#FFD84D; --red:#FF5C6B; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #bg{inset:0;z-index:1;background:radial-gradient(1700px 1500px at 50% 16%, #241E45 0%, #0D0B18 68%);}
+  #bgpulse{inset:0;z-index:2;background:radial-gradient(900px 900px at 50% 34%, rgba(91,79,233,.30), transparent 70%);
+    animation: pulse 18s ease-in-out 0s both;}
+  @keyframes pulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.6} }
+  #brand{top:56px;left:60px;z-index:90;display:flex;align-items:center;gap:20px;}
+  #brand .ic{width:88px;height:88px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:50px;}
+  #brand .nm{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.01em;text-shadow:0 3px 14px rgba(0,0,0,.45);}
+  #pager{top:78px;right:60px;z-index:90;}
+  #pager span{position:absolute;top:0;right:0;white-space:nowrap;color:#B9B2E8;font-size:40px;font-weight:800;opacity:0;}
+  @keyframes pg{ 0%{opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{opacity:0} }
+  #bar{left:60px;right:60px;bottom:74px;height:12px;border-radius:99px;background:rgba(255,255,255,.14);z-index:90;overflow:hidden;}
+  #bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand2),var(--yellow));transform-origin:left center;
+    animation: fill 18s linear 0s both;}
+  @keyframes fill{ from{transform:scaleX(.02)} to{transform:scaleX(1)} }
+  .card{left:70px;right:70px;top:290px;bottom:200px;border-radius:52px;z-index:20;
+    background:linear-gradient(172deg,#1A1733 0%, #12101F 100%);
+    border:2.5px solid rgba(255,255,255,.10);
+    box-shadow:0 50px 130px rgba(0,0,0,.62);
+    padding:96px 78px; display:flex; flex-direction:column; justify-content:center;}
+  @keyframes card{
+    0%{opacity:0; transform:translateY(78px) scale(.945);}
+    9%{opacity:1; transform:translateY(0) scale(1);}
+    90%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-46px) scale(.985);}
+  }
+  #c1{z-index:21; animation: card 3s cubic-bezier(.16,1,.3,1)  0s both}
+  #c2{z-index:22; animation: card 3s cubic-bezier(.16,1,.3,1)  3s both}
+  #c3{z-index:23; animation: card 3s cubic-bezier(.16,1,.3,1)  6s both}
+  #c4{z-index:24; animation: card 3s cubic-bezier(.16,1,.3,1)  9s both}
+  #c5{z-index:25; animation: card 3s cubic-bezier(.16,1,.3,1) 12s both}
+  #c6{z-index:26; animation: card 3s cubic-bezier(.16,1,.3,1) 15s both}
+  .kicker{font-size:38px;font-weight:800;letter-spacing:.02em;color:var(--brand2);margin-bottom:34px;}
+  .h{font-size:92px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-.015em;word-break:keep-all;}
+  .h.sm{font-size:74px;}
+  .hl{color:var(--yellow);}
+  .sub{margin-top:40px;font-size:44px;font-weight:600;color:#A9A2D4;line-height:1.5;word-break:keep-all;}
+  #c1{align-items:center;text-align:center;}
+  #c1 .emo{font-size:180px;margin-bottom:16px;}
+  #c1 .h{font-size:88px;}
+  .cmp{display:flex;flex-direction:column;gap:32px;margin-top:44px;}
+  .cmp .row{display:flex;align-items:center;gap:28px;background:rgba(255,255,255,.06);
+    border:2px solid rgba(255,255,255,.12);border-radius:30px;padding:32px 36px;}
+  .cmp .tag{flex:none;font-size:34px;font-weight:800;color:#fff;
+    background:var(--brand);border-radius:16px;padding:14px 22px;white-space:nowrap;}
+  .cmp .tx{font-size:42px;font-weight:700;color:#E6E2FF;line-height:1.35;word-break:keep-all;}
+  .list{margin-top:40px;display:flex;flex-direction:column;gap:22px;}
+  .list div{font-size:48px;font-weight:700;color:#F0EDFF;background:rgba(255,92,107,.13);
+    border-left:10px solid var(--red);border-radius:20px;padding:24px 30px;word-break:keep-all;}
+  .list.ok div{background:rgba(139,125,255,.15);border-left-color:var(--brand2);}
+  .note{margin-top:34px;font-size:38px;font-weight:600;color:#8E87BA;line-height:1.45;word-break:keep-all;}
+  #c6{background:linear-gradient(158deg,var(--brand2) -12%,var(--brand) 36%, var(--deep) 100%);
+    border-color:rgba(255,255,255,.22);align-items:center;text-align:center;}
+  #c6 .h{font-size:88px;line-height:1.26;}
+  #c6 .cta{margin-top:56px;font-size:48px;font-weight:800;color:#1A1440;background:var(--yellow);
+    border-radius:99px;padding:26px 56px;display:inline-block;}
+  #c6 .url{margin-top:38px;font-size:40px;font-weight:700;color:rgba(255,255,255,.86);}
+  #vig{inset:0;z-index:95;pointer-events:none;
+    background:radial-gradient(1250px 1250px at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <div id="bgpulse" class="abs"></div>
+  <div id="brand" class="abs"><div class="ic">🧺</div><div class="nm">소쿠리</div></div>
+  <div id="pager" class="abs">
+    <span style="animation: pg 3s linear  0s both">1 / 6</span>
+    <span style="animation: pg 3s linear  3s both">2 / 6</span>
+    <span style="animation: pg 3s linear  6s both">3 / 6</span>
+    <span style="animation: pg 3s linear  9s both">4 / 6</span>
+    <span style="animation: pg 3s linear 12s both">5 / 6</span>
+    <span style="animation: pg 3s linear 15s both">6 / 6</span>
+  </div>
+
+  <section id="c1" class="card abs">
+    <div class="emo">⏳</div>
+    <div class="h">노션 AI에도<br><span class="hl">한도</span>가<br>생겼습니다</div>
+    <div class="sub">비즈니스·엔터프라이즈 플랜 대상</div>
+  </section>
+
+  <section id="c2" class="card abs">
+    <div class="kicker">한도가 두 축으로 붙는다</div>
+    <div class="h sm">둘 다 지켜야 한다</div>
+    <div class="cmp">
+      <div class="row"><div class="tag">6시간 롤링</div><div class="tx">짧은 구간 몰아쓰기 제한</div></div>
+      <div class="row"><div class="tag">월간 제공량</div><div class="tx">청구 주기마다 초기화</div></div>
+    </div>
+    <div class="note">한쪽만 차도 일부 AI 기능이 잠긴다</div>
+  </section>
+
+  <section id="c3" class="card abs">
+    <div class="kicker">가장 헷갈리는 부분</div>
+    <div class="h">롤링은<br>한꺼번에<br><span class="hl">안 풀린다</span></div>
+    <div class="sub">정해진 시각에 리셋되는 게 아니라,<br>6시간 지난 사용량부터 차례로 빠지면서<br>그만큼만 잔량이 돌아온다</div>
+  </section>
+
+  <section id="c4" class="card abs">
+    <div class="kicker">한도에 걸리는 기능 4가지</div>
+    <div class="list">
+      <div>🤖 개인 에이전트 (채팅 포함)</div>
+      <div>🖼️ 이미지 생성</div>
+      <div>🌐 페이지 번역</div>
+      <div>🧩 Skills</div>
+    </div>
+    <div class="note">커스텀 에이전트·Worker는 크레딧제라 제외</div>
+  </section>
+
+  <section id="c5" class="card abs">
+    <div class="kicker">막혔을 때 선택지</div>
+    <div class="list ok">
+      <div>⏱️ 잔량이 돌아올 때까지 기다리기</div>
+      <div>🔓 제한 없는 기능으로 우회하기</div>
+      <div>💳 크레딧으로 이어 쓰기</div>
+    </div>
+    <div class="note">크레딧 이어쓰기는 관리자 설정 · 기본값은 꺼짐</div>
+  </section>
+
+  <section id="c6" class="card abs">
+    <div class="h">도구엔 한도가 붙어도<br><span class="hl">모아둔 건</span><br>남는다</div>
+    <div class="sub" style="color:rgba(255,255,255,.9)">쓰던 툴이 바뀌어도<br>링크와 메모는 내 손에 있어야 한다</div>
+    <div class="cta">붙여넣으면 1초, 정리는 AI가 🧺</div>
+    <div class="url">sokuri.app · 무료</div>
+  </section>
+
+  <div id="bar" class="abs"><i></i></div>
+  <div id="vig" class="abs"></div>
+</div>
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
