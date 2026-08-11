@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --deeper:#191447; --ink:#0B0916; --yellow:#FFD84D; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR','Liberation Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #s0{z-index:60;} #s1{z-index:20;} #wipe{z-index:30;} #s3{z-index:40;} #s4{z-index:50;} #vig{z-index:80;} #grain{z-index:81;}
+
+  /* S0 cover — EN 검증공식 feels ILLEGAL + 숫자 47 */
+  #s0{inset:0; background:radial-gradient(1800px 1540px at 50% 18%, #241E45 0%, #0D0B18 65%);
+    animation: coverZoom 1.3s ease-out 0s both, coverOut .35s ease-in 1.3s both;}
+  @keyframes coverZoom{ from{transform:scale(1.045);} to{transform:scale(1);} }
+  @keyframes coverOut{ to{opacity:0;} }
+  #s0 .badge{top:60px; left:60px; display:flex; align-items:center; gap:22px;}
+  #s0 .badge .ic{width:110px;height:110px;border-radius:30px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:64px;}
+  #s0 .badge .nm{color:#fff;font-size:50px;font-weight:800;text-shadow:0 3px 14px rgba(0,0,0,.4);}
+  #s0 .t{top:300px; left:40px; right:40px; text-align:center; color:#fff; font-weight:900; font-size:104px; line-height:1.22; letter-spacing:-.02em;}
+  #s0 .t .hl{color:var(--yellow);}
+  #s0 .csub{top:690px; left:0; right:0; text-align:center; color:#BCB5E8; font-size:52px; font-weight:700;}
+  #s0 .emo{top:800px; left:0; right:0; text-align:center; font-size:150px;}
+  #s0 .shot{left:50%; transform:translateX(-50%) rotate(-3deg); bottom:-90px; width:600px;}
+  #s0 .shot .phone{transform:scale(.857); transform-origin:top center;}
+
+  /* 공용: 폰 목업 (CSS로 구성한 자사 앱 화면 — 외부 이미지 의존 없음) */
+  .phone{width:700px; height:900px; border-radius:44px; overflow:hidden; background:#F6F5FB;
+    box-shadow:0 60px 140px rgba(8,4,40,.6), 0 0 0 10px rgba(255,255,255,.10); position:relative;}
+  .phone .top{height:150px; background:linear-gradient(160deg,#6E62F2,#4F44D6); padding:34px 40px 0; position:relative;}
+  .phone .top .ttl{color:#fff; font-size:46px; font-weight:900; letter-spacing:-.01em;}
+  .phone .top .sub{color:#D7D2FF; font-size:28px; font-weight:600; margin-top:8px;}
+  .phone .top .dots{position:absolute; right:40px; top:44px; color:#EDEAFF; font-size:40px; font-weight:900; letter-spacing:4px;}
+  .row{display:flex; align-items:center; gap:26px; padding:26px 34px; border-bottom:2px solid #E9E6F5; background:#fff;}
+  .row .ic{width:88px;height:88px;border-radius:24px;background:#EFEDFF;display:flex;align-items:center;justify-content:center;font-size:44px;flex:0 0 auto;}
+  .row .tx .n{font-size:38px;font-weight:800;color:#191447;}
+  .row .tx .s{font-size:28px;font-weight:600;color:#7B76A8;margin-top:7px;}
+  .row .rt{margin-left:auto;font-size:32px;color:#B6B1D4;font-weight:800;}
+  .row.sel{background:#F1EFFF;}
+  .sheet{position:absolute; left:0; right:0; bottom:0; background:#fff; border-radius:40px 40px 0 0;
+    box-shadow:0 -20px 60px rgba(20,10,80,.22); padding:30px 36px 40px;}
+  .sheet .grab{width:110px;height:10px;border-radius:99px;background:#DDD9EE;margin:0 auto 26px;}
+  .sheet .st{font-size:38px;font-weight:900;color:#191447;text-align:center;}
+  .sheet .link{margin-top:26px; background:#F1EFFF; border:3px dashed #B9B1F5; border-radius:24px;
+    padding:24px 28px; font-size:32px; font-weight:700; color:#5B4FE9; text-align:center; overflow:hidden; white-space:nowrap;}
+  .sheet .btn{margin-top:24px; background:var(--brand); color:#fff; border-radius:24px; padding:26px 0;
+    text-align:center; font-size:38px; font-weight:900;}
+
+  /* S1 one-by-one hell */
+  #s1{inset:0; background:linear-gradient(180deg,#141221 0%, #0B0916 100%); animation: cam1 4.1s linear 1.5s both;}
+  @keyframes cam1{ from{transform:scale(1);} to{transform:scale(1.05);} }
+  #s1 .cap{left:0;right:0;top:205px;text-align:center;z-index:9;}
+  #s1 .cap .q{font-size:60px;font-weight:900;color:#fff;text-shadow:0 10px 44px rgba(0,0,0,.8);letter-spacing:-.01em;}
+  #s1 .chatbox{left:70px; right:70px; top:392px; bottom:250px; border-radius:44px; overflow:hidden;
+    background:#1B1830; border:2.5px solid #2E2A4A; box-shadow:0 30px 80px rgba(0,0,0,.5);}
+  #s1 .chathead{position:relative; z-index:3; height:118px; background:#221E3C; display:flex; align-items:center; gap:20px; padding:0 40px;
+    border-bottom:2px solid #2E2A4A;}
+  #s1 .chathead .av{width:66px;height:66px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:36px;}
+  #s1 .chathead .t1{color:#fff;font-size:38px;font-weight:800;}
+  #s1 .chathead .t2{color:#8F89B8;font-size:26px;font-weight:600;margin-left:auto;}
+  #s1 .msgs{position:absolute; z-index:1; top:118px; left:0; right:0; bottom:0; padding:30px 36px;}
+  .bub{ position:relative; margin:0 0 16px auto; width:fit-content; max-width:720px;
+    background:var(--brand); color:#EDEBFF; border-radius:30px 30px 8px 30px;
+    padding:20px 32px; font-size:34px; font-weight:600; line-height:1.35;
+    box-shadow:0 10px 30px rgba(20,10,80,.35);
+    animation: bubIn .4s cubic-bezier(.2,1.35,.35,1) both; }
+  .bub.in{ margin:0 auto 16px 0; background:#2C2848; color:#CFCAE8; border-radius:30px 30px 30px 8px; }
+  .bub small{display:block; color:#BAB2F5; font-size:27px; margin-top:6px; font-weight:700;}
+  @keyframes bubIn{ from{opacity:0; transform:translateY(46px) scale(.85);} to{opacity:1; transform:translateY(0) scale(1);} }
+  #s1 .more{ position:absolute; left:0; right:0; bottom:56px; text-align:center; z-index:9;
+    animation: bubIn .45s cubic-bezier(.2,1.35,.35,1) 5.55s both; }
+  #s1 .more span{display:inline-block; background:rgba(11,9,22,.92); border:2.5px solid rgba(255,255,255,.34);
+    color:#fff; font-size:44px; font-weight:800; border-radius:999px; padding:20px 52px;
+    box-shadow:0 18px 50px rgba(0,0,0,.75);}
+  #s1 .msgs{animation: scrollHell 1.6s cubic-bezier(.6,0,.8,.4) 5.5s both;}
+  @keyframes scrollHell{ from{transform:translateY(0); filter:blur(0);} to{transform:translateY(-250px); filter:blur(5px);} }
+  #s1 .hell{ left:0;right:0;top:780px;text-align:center;z-index:12;padding:52px 0 58px;
+    background:linear-gradient(180deg, rgba(11,9,22,0) 0%, rgba(11,9,22,.94) 16%, rgba(11,9,22,.94) 84%, rgba(11,9,22,0) 100%);
+    animation: hellIn .45s cubic-bezier(.16,1.3,.3,1) 6.1s both; }
+  @keyframes hellIn{ from{opacity:0; transform:translateY(56px) scale(.82);} to{opacity:1; transform:translateY(0) scale(1);} }
+  #s1 .hell .h1{font-size:66px;font-weight:900;color:#fff;text-shadow:0 12px 50px rgba(0,0,0,.9);letter-spacing:-.01em;}
+  #s1 .hell .h2{font-size:48px;font-weight:700;color:#B7B1DC;margin-top:16px;text-shadow:0 8px 34px rgba(0,0,0,.9);}
+
+  #wipe{inset:0; background:linear-gradient(158deg,var(--brand2) -10%,var(--brand) 34%, var(--deep) 100%);
+    clip-path:circle(0px at 540px 1560px);
+    animation: wipeIn .75s cubic-bezier(.72,0,.2,1) 7.35s both;}
+  @keyframes wipeIn{ to{clip-path:circle(2350px at 540px 1560px);} }
+
+  /* S3 solution — share the whole folder */
+  #s3{inset:0; opacity:0; animation: sIn .01s linear 7.8s both;}
+  @keyframes sIn{ to{opacity:1;} }
+  #s3 .headline{position:absolute;left:0;right:0;top:220px;text-align:center;z-index:5;}
+  #s3 .headline .h1{font-size:72px;font-weight:900;color:#fff;text-shadow:0 10px 40px rgba(25,15,80,.55);letter-spacing:-.01em;}
+  #s3 .glow{left:140px;top:620px;width:800px;height:1000px;border-radius:60px;
+    background:radial-gradient(closest-side, rgba(255,255,255,.32), transparent 72%);}
+  .w{display:inline-block; opacity:0; animation: wPop .32s cubic-bezier(.2,1.4,.35,1) both;}
+  @keyframes wPop{ from{opacity:0; transform:translateY(48px) scale(.82);} to{opacity:1; transform:translateY(0) scale(1);} }
+  .appcard{ left:190px; top:610px; }
+  #cardA{ animation: cardIn .55s cubic-bezier(.16,1.3,.3,1) 7.9s both, cardOut .4s ease-in 11.3s both; }
+  #cardB{ animation: cardIn .5s cubic-bezier(.16,1.3,.3,1) 11.5s both, cardHold 1.5s ease-out 12.1s both; }
+  @keyframes cardIn{ from{opacity:0; transform:translateX(340px) rotate(7deg) scale(.86);} to{opacity:1; transform:translateX(0) rotate(0) scale(1);} }
+  @keyframes cardOut{ to{opacity:0; transform:translateX(-330px) rotate(-6deg) scale(.9);} }
+  @keyframes cardHold{ to{transform:scale(1.04);} }
+  .steptag{position:absolute; z-index:6; left:0; right:0; top:1750px; text-align:center;}
+  .steptag span{display:inline-block; font-size:50px; font-weight:800; color:#fff;
+    background:rgba(255,255,255,.14); border:2.5px solid rgba(255,255,255,.34);
+    padding:18px 46px; border-radius:999px;}
+  #tagA{ animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 8.1s both, tagOut .3s ease-in 9.6s both; }
+  #tagB{ animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 9.8s both, tagOut .3s ease-in 11.35s both; }
+  #tagC{ animation: tagIn .4s cubic-bezier(.2,1.3,.3,1) 11.7s both; }
+  #tagC span{ background:rgba(255,216,77,.16); border-color:rgba(255,216,77,.8);
+    box-shadow:0 0 34px rgba(255,216,77,.35); }
+  @keyframes tagIn{ from{opacity:0; transform:translateY(46px) scale(.85);} to{opacity:1; transform:translateY(0) scale(1);} }
+  @keyframes tagOut{ to{opacity:0; transform:translateY(-20px);} }
+  .ring{position:absolute; border:6px solid #FFD84D; border-radius:22px; z-index:7;
+    box-shadow:0 0 0 6px rgba(255,216,77,.25), 0 0 40px rgba(255,216,77,.5);
+    animation: ringPop .45s cubic-bezier(.2,1.4,.3,1) 8.85s both, ringPulse 1.1s ease-in-out 9.3s infinite, tagOut .3s ease-in 11.25s both;}
+  @keyframes ringPop{ from{opacity:0; transform:scale(.6);} to{opacity:1; transform:scale(1);} }
+  @keyframes ringPulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+  .arrive{left:150px; top:1540px; width:780px; z-index:9; opacity:0;
+    animation: tagIn .5s cubic-bezier(.16,1.35,.3,1) 11.95s both;}
+  .arrive .card{background:#fff; border-radius:34px; padding:30px 36px; display:flex; align-items:center; gap:26px;
+    box-shadow:0 30px 80px rgba(8,4,40,.5);}
+  .arrive .ic{width:96px;height:96px;border-radius:26px;background:#EFEDFF;display:flex;align-items:center;justify-content:center;font-size:52px;}
+  .arrive .tx .n{font-size:42px;font-weight:900;color:#191447;}
+  .arrive .tx .s{font-size:32px;font-weight:700;color:#6B66A0;margin-top:6px;}
+  .arrive .chk{margin-left:auto;font-size:56px;}
+
+  /* S4 closing */
+  #s4{inset:0; background:linear-gradient(172deg,var(--brand) 0%, var(--deeper) 92%);
+    opacity:0; animation: sIn .4s ease-in 13.35s both;}
+  #s4 .big{left:0;right:0;top:500px;text-align:center;}
+  #s4 .big .b1{font-size:80px;font-weight:900;color:#fff;letter-spacing:-.02em; animation: tagIn .45s ease-out 13.55s both;}
+  #s4 .big .b2{font-size:40px;font-weight:700;color:#D9D4FF;margin-top:24px; animation: tagIn .45s ease-out 13.85s both;}
+  #s4 .tile{left:415px; top:840px; width:250px; height:250px; border-radius:58px; background:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:140px; overflow:hidden;
+    box-shadow:0 40px 100px rgba(8,4,40,.55);
+    animation: tileIn .55s cubic-bezier(.16,1.4,.3,1) 14.1s both, pulse 1.4s ease-in-out 14.8s infinite;}
+  #s4 .tile .shine{position:absolute; top:-40%; left:-80%; width:60%; height:180%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,.85), transparent);
+    transform:rotate(18deg); animation: shine 1s ease-in-out 14.6s both;}
+  @keyframes shine{ from{left:-80%;} to{left:130%;} }
+  @keyframes tileIn{ from{opacity:0; transform:scale(.5) rotate(-10deg);} to{opacity:1; transform:scale(1) rotate(0);} }
+  @keyframes pulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+  #s4 .url{left:0;right:0;top:1180px;text-align:center; animation: tagIn .45s ease-out 14.45s both;}
+  #s4 .url span{display:inline-block;background:rgba(255,255,255,.15);border:3px solid rgba(255,255,255,.4);
+    color:#fff;border-radius:999px;padding:22px 60px;font-size:54px;font-weight:900;}
+
+  #vig{inset:0;pointer-events:none;background:radial-gradient(1400px 1150px at 50% 44%, transparent 52%, rgba(0,0,0,.46) 100%);}
+  #grain{inset:0;pointer-events:none;opacity:.055;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2'/></filter><rect width='220' height='220' filter='url(%23n)' opacity='0.8'/></svg>");}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <section id="s0" class="abs">
+    <div class="badge abs"><div class="ic">🧺</div><div class="nm">sokuri.app</div></div>
+    <div class="t abs">Sending <span class="hl">47 links</span><br>as <span class="hl">ONE link</span><br>feels ILLEGAL</div>
+    <div class="csub abs">(it's just a folder)</div>
+    <div class="emo abs">🎁</div>
+    <div class="shot abs">
+      <div class="phone">
+        <div class="top"><div class="ttl">My folders</div><div class="sub">5 folders · 393 links</div><div class="dots">•••</div></div>
+        <div class="row"><div class="ic">🏝️</div><div class="tx"><div class="n">Japan trip</div><div class="s">47 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">🍜</div><div class="tx"><div class="n">Places to eat</div><div class="s">88 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">💡</div><div class="tx"><div class="n">Read later</div><div class="s">164 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">🏋️</div><div class="tx"><div class="n">Workouts</div><div class="s">73 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">🎁</div><div class="tx"><div class="n">Gift ideas</div><div class="s">21 links</div></div><div class="rt">›</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="s1" class="abs">
+    <div class="cap abs"><div class="q"><span class="w" style="animation-delay:1.7s">Planning a trip with a friend:</span></div></div>
+    <div class="chatbox abs">
+      <div class="chathead">
+        <div class="av">✈️</div><div class="t1">Japan trip 🇯🇵</div><div class="t2">2 people</div>
+      </div>
+      <div class="msgs">
+        <div class="bub" style="animation-delay:1.9s">ok sending you the places I saved<small>link 1 of 47</small></div>
+        <div class="bub" style="animation-delay:2.3s">https://blog…tokyo-cafe</div>
+        <div class="bub" style="animation-delay:2.7s">oh and this one https://youtu.be/…</div>
+        <div class="bub" style="animation-delay:3.1s">one sec, one more 🙏</div>
+        <div class="bub" style="animation-delay:3.5s">https://insta…shibuya</div>
+        <div class="bub in" style="animation-delay:3.9s">…how many more? 😅</div>
+        <div class="bub" style="animation-delay:4.3s">35 to go</div>
+        <div class="bub" style="animation-delay:4.6s">https://blog…osaka-food</div>
+        <div class="bub" style="animation-delay:4.9s">https://maps…fushimi-inari</div>
+        <div class="bub in" style="animation-delay:5.2s">can you just send them all at once 😩</div>
+      </div>
+      <div class="more"><span>35 links still to send …😮‍💨</span></div>
+    </div>
+    <div class="hell abs">
+      <div class="h1">Sent 12 of 47. Gave up.</div>
+      <div class="h2">Neither of us knows what got sent 🌀</div>
+    </div>
+  </section>
+
+  <div id="wipe" class="abs"></div>
+
+  <section id="s3" class="abs">
+    <div class="headline">
+      <div class="h1"><span class="w" style="animation-delay:7.95s">Just send</span> <span class="w" style="animation-delay:8.12s">the whole folder</span> <span class="w" style="animation-delay:8.3s">🧺</span></div>
+    </div>
+    <div class="glow abs"></div>
+
+    <div id="cardA" class="appcard abs">
+      <div class="phone">
+        <div class="top"><div class="ttl">My folders</div><div class="sub">5 folders · 393 links</div><div class="dots">•••</div></div>
+        <div class="row sel"><div class="ic">🏝️</div><div class="tx"><div class="n">Japan trip</div><div class="s">47 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">🍜</div><div class="tx"><div class="n">Places to eat</div><div class="s">88 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">💡</div><div class="tx"><div class="n">Read later</div><div class="s">164 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">🏋️</div><div class="tx"><div class="n">Workouts</div><div class="s">73 links</div></div><div class="rt">›</div></div>
+        <div class="row"><div class="ic">🎁</div><div class="tx"><div class="n">Gift ideas</div><div class="s">21 links</div></div><div class="rt">›</div></div>
+      </div>
+    </div>
+
+    <div id="cardB" class="appcard abs">
+      <div class="phone">
+        <div class="top"><div class="ttl">Japan trip</div><div class="sub">47 links · shared folder</div><div class="dots">•••</div></div>
+        <div class="row"><div class="ic">☕</div><div class="tx"><div class="n">Tokyo cafe guide</div><div class="s">blog · saved Tue</div></div></div>
+        <div class="row"><div class="ic">📺</div><div class="tx"><div class="n">3 days in Kyoto</div><div class="s">video · saved Tue</div></div></div>
+        <div class="sheet">
+          <div class="grab"></div>
+          <div class="st">Share this folder</div>
+          <div class="link">sokuri.app/f/japan-trip</div>
+          <div class="btn">Copy link</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ring abs" style="left:216px;top:770px;width:648px;height:130px;"></div>
+
+    <div class="arrive abs">
+      <div class="card">
+        <div class="ic">🧺</div>
+        <div class="tx"><div class="n">Japan trip</div><div class="s">47 links · arrived as one folder</div></div>
+        <div class="chk">✅</div>
+      </div>
+    </div>
+
+    <div id="tagA" class="steptag"><span>① pick the folder</span></div>
+    <div id="tagB" class="steptag"><span>② copy one link ✅</span></div>
+    <div id="tagC" class="steptag"><span>③ all 47 land at once 🧺</span></div>
+  </section>
+
+  <section id="s4" class="abs">
+    <div class="big abs">
+      <div class="b1">One link. Whole folder.</div>
+      <div class="b2">Save links in 1 second — AI files them for you 🤫</div>
+    </div>
+    <div class="tile abs">🧺<div class="shine"></div></div>
+    <div class="url abs"><span>sokuri.app · free</span></div>
+  </section>
+
+  <div id="vig" class="abs"></div>
+  <div id="grain" class="abs"></div>
+</div>
+
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
