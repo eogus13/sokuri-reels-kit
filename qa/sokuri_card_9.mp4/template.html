@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --ink:#0B0916; --yellow:#FFD84D; --red:#FF5C6B; --green:#4CD6A0; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #bg{inset:0;z-index:1;background:radial-gradient(1700px 1500px at 50% 16%, #241E45 0%, #0D0B18 68%);}
+  #bgpulse{inset:0;z-index:2;background:radial-gradient(900px 900px at 50% 34%, rgba(91,79,233,.30), transparent 70%);
+    animation: pulse 18s ease-in-out 0s both;}
+  @keyframes pulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.6} }
+  #brand{top:56px;left:60px;z-index:90;display:flex;align-items:center;gap:20px;}
+  #brand .ic{width:88px;height:88px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:50px;}
+  #brand .nm{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.01em;text-shadow:0 3px 14px rgba(0,0,0,.45);}
+  #pager{top:78px;right:60px;z-index:90;}
+  #pager span{position:absolute;top:0;right:0;white-space:nowrap;color:#B9B2E8;font-size:40px;font-weight:800;opacity:0;}
+  @keyframes pg{ 0%{opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{opacity:0} }
+  #bar{left:60px;right:60px;bottom:74px;height:12px;border-radius:99px;background:rgba(255,255,255,.14);z-index:90;overflow:hidden;}
+  #bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand2),var(--yellow));transform-origin:left center;
+    animation: fill 18s linear 0s both;}
+  @keyframes fill{ from{transform:scaleX(.02)} to{transform:scaleX(1)} }
+  .card{left:70px;right:70px;top:290px;bottom:200px;border-radius:52px;z-index:20;
+    background:linear-gradient(172deg,#1A1733 0%, #12101F 100%);
+    border:2.5px solid rgba(255,255,255,.10);
+    box-shadow:0 50px 130px rgba(0,0,0,.62);
+    padding:96px 78px; display:flex; flex-direction:column; justify-content:center;}
+  @keyframes card{
+    0%{opacity:0; transform:translateY(78px) scale(.945);}
+    9%{opacity:1; transform:translateY(0) scale(1);}
+    90%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-46px) scale(.985);}
+  }
+  #c1{z-index:21; animation: card 3s cubic-bezier(.16,1,.3,1)  0s both}
+  #c2{z-index:22; animation: card 3s cubic-bezier(.16,1,.3,1)  3s both}
+  #c3{z-index:23; animation: card 3s cubic-bezier(.16,1,.3,1)  6s both}
+  #c4{z-index:24; animation: card 3s cubic-bezier(.16,1,.3,1)  9s both}
+  #c5{z-index:25; animation: card 3s cubic-bezier(.16,1,.3,1) 12s both}
+  #c6{z-index:26; animation: card 3s cubic-bezier(.16,1,.3,1) 15s both}
+  .kicker{font-size:38px;font-weight:800;letter-spacing:.02em;color:var(--brand2);margin-bottom:34px;line-height:1.35;word-break:keep-all;}
+  .h{font-size:88px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-.015em;word-break:keep-all;}
+  .h.sm{font-size:72px;}
+  .h.xs{font-size:62px;}
+  .hl{color:var(--yellow);}
+  .sub{margin-top:40px;font-size:44px;font-weight:600;color:#A9A2D4;line-height:1.5;word-break:keep-all;}
+  #c1{align-items:center;text-align:center;}
+  #c1 .emo{font-size:160px;margin-bottom:10px;}
+  .list{margin-top:40px;display:flex;flex-direction:column;gap:22px;}
+  .list div{font-size:44px;font-weight:700;color:#F0EDFF;background:rgba(139,125,255,.14);
+    border-left:10px solid var(--brand2);border-radius:20px;padding:24px 30px;word-break:keep-all;line-height:1.35;}
+  .list.ok div{background:rgba(76,214,160,.13);border-left-color:var(--green);}
+  .note{margin-top:34px;font-size:34px;font-weight:600;color:#8E87BA;line-height:1.45;word-break:keep-all;}
+  .stat{margin-top:44px;display:flex;gap:22px;}
+  .stat .box{flex:1;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
+    border-radius:28px;padding:32px 16px;text-align:center;}
+  .stat .nm{font-size:31px;font-weight:800;color:#B9B2E8;line-height:1.3;word-break:keep-all;min-height:82px;}
+  .stat .vl{margin-top:10px;font-size:70px;font-weight:900;color:var(--yellow);line-height:1.05;}
+  .stat .vl.dn{color:var(--red);}
+  .stat .vl.up{color:var(--green);}
+  #c4{border-color:rgba(255,216,77,.34);}
+  #c6{background:linear-gradient(158deg,var(--brand2) -12%,var(--brand) 36%, var(--deep) 100%);
+    border-color:rgba(255,255,255,.22);align-items:center;text-align:center;}
+  #c6 .h{font-size:70px;line-height:1.3;}
+  #c6 .cta{margin-top:52px;font-size:46px;font-weight:800;color:#1A1440;background:var(--yellow);
+    border-radius:99px;padding:26px 52px;display:inline-block;}
+  #c6 .url{margin-top:36px;font-size:40px;font-weight:700;color:rgba(255,255,255,.86);}
+  #vig{inset:0;z-index:95;pointer-events:none;
+    background:radial-gradient(1250px 1250px at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <div id="bgpulse" class="abs"></div>
+  <div id="brand" class="abs"><div class="ic">🧺</div><div class="nm">소쿠리</div></div>
+  <div id="pager" class="abs">
+    <span style="animation: pg 3s linear  0s both">1 / 6</span>
+    <span style="animation: pg 3s linear  3s both">2 / 6</span>
+    <span style="animation: pg 3s linear  6s both">3 / 6</span>
+    <span style="animation: pg 3s linear  9s both">4 / 6</span>
+    <span style="animation: pg 3s linear 12s both">5 / 6</span>
+    <span style="animation: pg 3s linear 15s both">6 / 6</span>
+  </div>
+
+  <section id="c1" class="card abs">
+    <div class="emo">🔎</div>
+    <div class="h">AI가 먼저<br>가져가는 일은<br><span class="hl">따로 있었다</span></div>
+    <div class="sub">미 연준·앤스로픽 데이터로 확인</div>
+  </section>
+
+  <section id="c2" class="card abs">
+    <div class="kicker">2022년 가을 이후 미국 고용 실측</div>
+    <div class="stat">
+      <div class="box"><div class="nm">미국 전체<br>고용</div><div class="vl up">+2.5%</div></div>
+      <div class="box"><div class="nm">AI 노출<br>산업</div><div class="vl dn">-1%</div></div>
+      <div class="box"><div class="nm">컴퓨터<br>시스템 설계</div><div class="vl dn">-5%</div></div>
+    </div>
+    <div class="sub">전체 고용은 늘었는데<br>AI가 닿은 산업만 줄었다</div>
+    <div class="note">댈러스 연방준비은행 분석 (2026년 2월)</div>
+  </section>
+
+  <section id="c3" class="card abs">
+    <div class="kicker">그런데 임금은 반대로 갔다</div>
+    <div class="h sm">사람은 줄었는데<br><span class="hl">임금은 더 올랐다</span></div>
+    <div class="stat">
+      <div class="box"><div class="nm">전국 평균<br>주급</div><div class="vl">+7.5%</div></div>
+      <div class="box"><div class="nm">컴퓨터<br>시스템 설계</div><div class="vl">+16.7%</div></div>
+    </div>
+    <div class="note">같은 기간, 가장 많이 줄어든 그 산업에서</div>
+  </section>
+
+  <section id="c4" class="card abs">
+    <div class="kicker">갈린 기준은 '경험 프리미엄'이었다</div>
+    <div class="h xs">설명되는 일이 아니라<br><span class="hl">경험 없이</span> 설명되는 일</div>
+    <div class="list">
+      <div>📕 교과서로 배우는 일 → AI가 대체</div>
+      <div>🧭 겪어야 아는 일 → AI가 보조</div>
+    </div>
+    <div class="note">경험 프리미엄 0% 직업은 AI 노출이 클수록 임금 상승률 -0.28%p, 상위 10% 직업은 +0.2%p</div>
+  </section>
+
+  <section id="c5" class="card abs">
+    <div class="kicker">실사용 데이터는 통념과 달랐다</div>
+    <div class="list ok">
+      <div>🤖 통째로 맡기는 일 1위 — 앱·웹사이트·게임 제작</div>
+      <div>🙋 가장 덜 맡기는 일 — 번역·계산·질의응답</div>
+    </div>
+    <div class="sub">제일 먼저 사라진다고들 말하는 일이<br>실제로는 제일 안 맡기는 일이었다</div>
+    <div class="note">앤스로픽 이코노믹 인덱스 (2026년 6월, 이용자 약 9,700명 조사 포함)</div>
+  </section>
+
+  <section id="c6" class="card abs">
+    <div class="h">교과서에 있는 건<br>AI가 안다.<br>모르는 건 <span class="hl">내가 모은 것</span>뿐</div>
+    <div class="sub" style="color:rgba(255,255,255,.9)">교과서로 배울 수 있는 일부터 넘어간다면<br>남는 건 내가 직접 모아둔 것들이다</div>
+    <div class="cta">붙여넣으면 1초, 정리는 AI가 🧺</div>
+    <div class="url">sokuri.app · 무료</div>
+  </section>
+
+  <div id="bar" class="abs"><i></i></div>
+  <div id="vig" class="abs"></div>
+</div>
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
