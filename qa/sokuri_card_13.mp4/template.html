@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --ink:#0B0916; --yellow:#FFD84D; --red:#FF5C6B; --green:#4CD6A0; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #bg{inset:0;z-index:1;background:radial-gradient(1700px 1500px at 50% 16%, #241E45 0%, #0D0B18 68%);}
+  #bgpulse{inset:0;z-index:2;background:radial-gradient(900px 900px at 50% 34%, rgba(91,79,233,.30), transparent 70%);
+    animation: pulse 18s ease-in-out 0s both;}
+  @keyframes pulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.6} }
+  #brand{top:56px;left:60px;z-index:90;display:flex;align-items:center;gap:20px;}
+  #brand .ic{width:88px;height:88px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:50px;}
+  #brand .nm{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.01em;text-shadow:0 3px 14px rgba(0,0,0,.45);}
+  #pager{top:78px;right:60px;z-index:90;}
+  #pager span{position:absolute;top:0;right:0;white-space:nowrap;color:#B9B2E8;font-size:40px;font-weight:800;opacity:0;}
+  @keyframes pg{ 0%{opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{opacity:0} }
+  #bar{left:60px;right:60px;bottom:74px;height:12px;border-radius:99px;background:rgba(255,255,255,.14);z-index:90;overflow:hidden;}
+  #bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand2),var(--yellow));transform-origin:left center;
+    animation: fill 18s linear 0s both;}
+  @keyframes fill{ from{transform:scaleX(.02)} to{transform:scaleX(1)} }
+  .card{left:70px;right:70px;top:290px;bottom:200px;border-radius:52px;z-index:20;
+    background:linear-gradient(172deg,#1A1733 0%, #12101F 100%);
+    border:2.5px solid rgba(255,255,255,.10);
+    box-shadow:0 50px 130px rgba(0,0,0,.62);
+    padding:96px 78px; display:flex; flex-direction:column; justify-content:center;}
+  @keyframes card{
+    0%{opacity:0; transform:translateY(78px) scale(.945);}
+    9%{opacity:1; transform:translateY(0) scale(1);}
+    90%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-46px) scale(.985);}
+  }
+  #c1{z-index:21; animation: card 3s cubic-bezier(.16,1,.3,1)  0s both}
+  #c2{z-index:22; animation: card 3s cubic-bezier(.16,1,.3,1)  3s both}
+  #c3{z-index:23; animation: card 3s cubic-bezier(.16,1,.3,1)  6s both}
+  #c4{z-index:24; animation: card 3s cubic-bezier(.16,1,.3,1)  9s both}
+  #c5{z-index:25; animation: card 3s cubic-bezier(.16,1,.3,1) 12s both}
+  #c6{z-index:26; animation: card 3s cubic-bezier(.16,1,.3,1) 15s both}
+  .kicker{font-size:38px;font-weight:800;letter-spacing:.02em;color:var(--brand2);margin-bottom:34px;}
+  .h{font-size:88px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-.015em;word-break:keep-all;}
+  .h.sm{font-size:72px;}
+  .hl{color:var(--yellow);}
+  .sub{margin-top:40px;font-size:44px;font-weight:600;color:#A9A2D4;line-height:1.5;word-break:keep-all;}
+  .note{margin-top:34px;font-size:36px;font-weight:600;color:#8E87BA;line-height:1.45;word-break:keep-all;}
+  .list{margin-top:40px;display:flex;flex-direction:column;gap:22px;}
+  .list div{font-size:46px;font-weight:700;color:#F0EDFF;background:rgba(139,125,255,.14);
+    border-left:10px solid var(--brand2);border-radius:20px;padding:24px 30px;word-break:keep-all;}
+  .list.ok div{background:rgba(76,214,160,.13);border-left-color:var(--green);}
+  .list.warn div{background:rgba(255,92,107,.13);border-left-color:var(--red);}
+  #c1{align-items:center;text-align:center;}
+  #c1 .emo{font-size:170px;margin-bottom:12px;}
+  #c6{background:linear-gradient(158deg,var(--brand2) -12%,var(--brand) 36%, var(--deep) 100%);
+    border-color:rgba(255,255,255,.22);align-items:center;text-align:center;}
+  #c6 .h{font-size:84px;line-height:1.26;}
+  #c6 .cta{margin-top:56px;font-size:46px;font-weight:800;color:#1A1440;background:var(--yellow);
+    border-radius:99px;padding:26px 52px;display:inline-block;}
+  #c6 .url{margin-top:38px;font-size:40px;font-weight:700;color:rgba(255,255,255,.86);}
+  #vig{inset:0;z-index:95;pointer-events:none;
+    background:radial-gradient(1250px 1250px at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <div id="bgpulse" class="abs"></div>
+  <div id="brand" class="abs"><div class="ic">🧺</div><div class="nm">소쿠리</div></div>
+  <div id="pager" class="abs">
+    <span style="animation: pg 3s linear  0s both">1 / 6</span>
+    <span style="animation: pg 3s linear  3s both">2 / 6</span>
+    <span style="animation: pg 3s linear  6s both">3 / 6</span>
+    <span style="animation: pg 3s linear  9s both">4 / 6</span>
+    <span style="animation: pg 3s linear 12s both">5 / 6</span>
+    <span style="animation: pg 3s linear 15s both">6 / 6</span>
+  </div>
+  <section id="c1" class="card abs">
+    <div class="emo">🖥️</div>
+    <div class="h">챗GPT가<br>내 맥을 <span class="hl">지켜봅니다</span><br>딱 4가지만 빼고</div>
+    <div class="sub">오픈AI '컴퓨터 히스토리' · 8월 13일</div>
+  </section>
+  <section id="c2" class="card abs">
+    <div class="kicker">8월 13일 · 오픈AI</div>
+    <div class="h sm">맥에서 한 행동이<br>챗GPT의 <span class="hl">기억</span>이 됩니다</div>
+    <div class="list">
+      <div>🖱️ 클릭</div>
+      <div>⌨️ 타이핑 · 단축키</div>
+      <div>🔀 앱 전환</div>
+    </div>
+    <div class="note">macOS 접근성 권한으로 수집 · 스크린샷을 찍던 'Chronicle' 프리뷰를 대체</div>
+  </section>
+  <section id="c3" class="card abs">
+    <div class="kicker">안 보는 것 4가지</div>
+    <div class="list ok">
+      <div>🚫 스크린샷</div>
+      <div>🚫 화면 녹화</div>
+      <div>🚫 마이크 입력</div>
+      <div>🚫 시스템 오디오</div>
+    </div>
+    <div class="note">시크릿 창 활동도 기록되지 않는다 · 대상은 Pro · 비즈니스 · 엔터프라이즈</div>
+  </section>
+  <section id="c4" class="card abs">
+    <div class="kicker">그런데</div>
+    <div class="h sm">그렇게 만든 기억은<br>내 맥에 <span class="hl">평문 파일</span>로<br>남습니다</div>
+    <div class="sub">원본 행동 기록은 맥에 48시간만 임시 보관되지만,<br>거기서 만들어진 '기억'은 일반 텍스트 마크다운으로 저장됩니다.</div>
+    <div class="note">같은 맥 사용자 계정의 다른 프로그램이 이 파일을 읽을 수 있다고 오픈AI가 직접 안내</div>
+  </section>
+  <section id="c5" class="card abs">
+    <div class="kicker">그래서 현실은</div>
+    <div class="h sm">기본값은 <span class="hl">꺼짐</span>,<br>켜는 것도 내 손입니다</div>
+    <div class="list">
+      <div>⏸️ 언제든 수집 일시정지</div>
+      <div>🗑️ 10분 · 1시간 · 하루 · 전체 삭제</div>
+    </div>
+    <div class="note">유럽경제지역 · 영국 · 스위스는 제공 제외 · 오픈AI 공식 릴리스 노트 기준</div>
+  </section>
+  <section id="c6" class="card abs">
+    <div class="h">쌓이는 기록과<br><span class="hl">고른 기록</span>은<br>다릅니다</div>
+    <div class="sub" style="color:rgba(255,255,255,.9)">행동은 알아서 쌓여도,<br>어제 스친 그 링크는 아무도 안 모아줘요.</div>
+    <div class="cta">붙여넣으면 1초, 정리는 AI가 🧺</div>
+    <div class="url">sokuri.app · 무료</div>
+  </section>
+  <div id="bar" class="abs"><i></i></div>
+  <div id="vig" class="abs"></div>
+</div>
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
