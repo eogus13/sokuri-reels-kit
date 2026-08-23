@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --ink:#0B0916; --yellow:#FFD84D; --red:#FF5C6B; --green:#4CD6A0; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+
+  #bg{inset:0;z-index:1;background:radial-gradient(1700px 1500px at 50% 16%, #241E45 0%, #0D0B18 68%);}
+  #bgpulse{inset:0;z-index:2;background:radial-gradient(900px 900px at 50% 34%, rgba(91,79,233,.30), transparent 70%);
+    animation: pulse 18s ease-in-out 0s both;}
+  @keyframes pulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.6} }
+  #brand{top:56px;left:60px;z-index:90;display:flex;align-items:center;gap:20px;}
+  #brand .ic{width:88px;height:88px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:50px;}
+  #brand .nm{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.01em;text-shadow:0 3px 14px rgba(0,0,0,.45);}
+  #pager{top:78px;right:60px;z-index:90;}
+  #pager span{position:absolute;top:0;right:0;white-space:nowrap;color:#B9B2E8;font-size:40px;font-weight:800;opacity:0;}
+  @keyframes pg{ 0%{opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{opacity:0} }
+  #bar{left:60px;right:60px;bottom:74px;height:12px;border-radius:99px;background:rgba(255,255,255,.14);z-index:90;overflow:hidden;}
+  #bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand2),var(--yellow));transform-origin:left center;
+    animation: fill 18s linear 0s both;}
+  @keyframes fill{ from{transform:scaleX(.02)} to{transform:scaleX(1)} }
+
+  .card{left:70px;right:70px;top:290px;bottom:200px;border-radius:52px;z-index:20;
+    background:linear-gradient(172deg,#1A1733 0%, #12101F 100%);
+    border:2.5px solid rgba(255,255,255,.10);
+    box-shadow:0 50px 130px rgba(0,0,0,.62);
+    padding:96px 78px; display:flex; flex-direction:column; justify-content:center;}
+  @keyframes card{
+    0%{opacity:0; transform:translateY(78px) scale(.945);}
+    9%{opacity:1; transform:translateY(0) scale(1);}
+    90%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-46px) scale(.985);}
+  }
+  #c1{z-index:21; animation: card 3s cubic-bezier(.16,1,.3,1)  0s both}
+  #c2{z-index:22; animation: card 3s cubic-bezier(.16,1,.3,1)  3s both}
+  #c3{z-index:23; animation: card 3s cubic-bezier(.16,1,.3,1)  6s both}
+  #c4{z-index:24; animation: card 3s cubic-bezier(.16,1,.3,1)  9s both}
+  #c5{z-index:25; animation: card 3s cubic-bezier(.16,1,.3,1) 12s both}
+  #c6{z-index:26; animation: card 3s cubic-bezier(.16,1,.3,1) 15s both}
+
+  .kicker{font-size:38px;font-weight:800;letter-spacing:.02em;color:var(--brand2);margin-bottom:34px;}
+  .h{font-size:88px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-.015em;word-break:keep-all;}
+  .h.sm{font-size:72px;}
+  .hl{color:var(--yellow);}
+  .dim{color:#7C75A8;}
+  .sub{margin-top:40px;font-size:44px;font-weight:600;color:#A9A2D4;line-height:1.5;word-break:keep-all;}
+  .note{margin-top:34px;font-size:36px;font-weight:600;color:#8E87BA;line-height:1.45;word-break:keep-all;}
+
+  .big{margin-top:46px;text-align:center;}
+  .big .vl{font-size:120px;font-weight:900;color:var(--yellow);line-height:1.1;letter-spacing:-.02em;}
+  .big .un{margin-top:20px;font-size:44px;font-weight:800;color:#CFC9F0;line-height:1.4;word-break:keep-all;}
+  .stat{margin-top:44px;display:flex;gap:26px;}
+  .stat .box{flex:1;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
+    border-radius:30px;padding:36px 22px;text-align:center;}
+  .stat .box.win{background:rgba(255,216,77,.12);border-color:rgba(255,216,77,.42);}
+  .stat .nm{font-size:34px;font-weight:800;color:#B9B2E8;line-height:1.3;word-break:keep-all;}
+  .stat .vl{margin-top:16px;font-size:82px;font-weight:900;color:var(--yellow);line-height:1;}
+  .stat .box:not(.win) .vl{color:#8E87BA;}
+  .stat .un{margin-top:12px;font-size:32px;font-weight:700;color:#9C95C8;}
+
+  /* 24시간 히스토그램 */
+  .hist{margin-top:26px;height:360px;display:flex;align-items:flex-end;gap:8px;}
+  .hb{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%;}
+  .hb i{display:block;width:100%;border-radius:10px 10px 4px 4px;
+    background:linear-gradient(180deg,#7E71F0,#4A3FBF);transform-origin:bottom center;}
+  .hb.hot i{background:linear-gradient(180deg,var(--yellow),#F2A93B);
+    box-shadow:0 0 34px rgba(255,216,77,.45);}
+  @keyframes rise{ from{transform:scaleY(0)} to{transform:scaleY(1)} }
+  .axis{position:relative;height:52px;margin-top:16px;border-top:2px solid rgba(255,255,255,.12);}
+  .axis span{position:absolute;top:14px;transform:translateX(-50%);white-space:nowrap;font-size:30px;font-weight:700;color:#8E87BA;}
+  .axis span.last{transform:translateX(-100%);}
+  .peak{margin-top:6px;text-align:center;font-size:40px;font-weight:800;color:var(--yellow);}
+
+  .vs{margin-top:46px;display:flex;flex-direction:column;gap:26px;}
+  .vs .r{display:flex;align-items:center;gap:26px;}
+  .vs .r .t{width:250px;font-size:40px;font-weight:800;color:#CFC9F0;}
+  .vs .r .tk{flex:1;height:44px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;}
+  .vs .r .tk i{display:block;height:100%;border-radius:99px;transform-origin:left center;}
+  .vs .r .n{width:150px;text-align:right;font-size:46px;font-weight:900;}
+  .vs .day .tk i{width:100%;background:linear-gradient(90deg,var(--brand2),var(--yellow));
+    animation: grow .8s cubic-bezier(.16,1,.3,1) 6.35s both}
+  .vs .day .n{color:var(--yellow);}
+  .vs .dawn .tk i{width:16.4%;background:linear-gradient(90deg,#4A4370,#6A62A0);
+    animation: grow .8s cubic-bezier(.16,1,.3,1) 6.60s both}
+  .vs .dawn .n{color:#8E87BA;}
+  @keyframes grow{ from{transform:scaleX(0)} to{transform:scaleX(1)} }
+
+  #c1{align-items:center;text-align:center;}
+  #c1 .emo{font-size:150px;margin-bottom:6px;}
+  #c6{background:linear-gradient(158deg,var(--brand2) -12%,var(--brand) 36%, var(--deep) 100%);
+    border-color:rgba(255,255,255,.22);align-items:center;text-align:center;}
+  #c6 .h{font-size:80px;line-height:1.26;}
+  #c6 .cta{margin-top:52px;font-size:44px;font-weight:800;color:#1A1440;background:var(--yellow);
+    border-radius:99px;padding:26px 48px;display:inline-block;}
+  #c6 .url{margin-top:36px;font-size:40px;font-weight:700;color:rgba(255,255,255,.86);}
+
+  #vig{inset:0;z-index:95;pointer-events:none;
+    background:radial-gradient(1250px 1250px at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <div id="bgpulse" class="abs"></div>
+  <div id="brand" class="abs"><div class="ic">🧺</div><div class="nm">소쿠리</div></div>
+  <div id="pager" class="abs">
+    <span style="animation: pg 3s linear  0s both">1 / 6</span>
+    <span style="animation: pg 3s linear  3s both">2 / 6</span>
+    <span style="animation: pg 3s linear  6s both">3 / 6</span>
+    <span style="animation: pg 3s linear  9s both">4 / 6</span>
+    <span style="animation: pg 3s linear 12s both">5 / 6</span>
+    <span style="animation: pg 3s linear 15s both">6 / 6</span>
+  </div>
+
+  <section id="c1" class="card abs">
+    <div class="emo">🕑</div>
+    <div class="h">링크는 <span class="dim">밤에</span> 저장한다?<br>제일 많은 건<br><span class="hl">오후 2시</span>였습니다</div>
+    <div class="sub">소쿠리 만든 사람 본인 기록 · 링크 116개</div>
+  </section>
+
+  <section id="c2" class="card abs">
+    <div class="kicker">저장 시각 24시간 분포</div>
+    <div class="hist">
+      <div class="hb"><i style="height:45px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.250s both"></i></div>
+      <div class="hb"><i style="height:6px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.272s both"></i></div>
+      <div class="hb"><i style="height:15px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.294s both"></i></div>
+      <div class="hb"><i style="height:90px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.316s both"></i></div>
+      <div class="hb"><i style="height:6px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.338s both"></i></div>
+      <div class="hb"><i style="height:6px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.360s both"></i></div>
+      <div class="hb"><i style="height:15px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.382s both"></i></div>
+      <div class="hb"><i style="height:45px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.404s both"></i></div>
+      <div class="hb"><i style="height:60px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.426s both"></i></div>
+      <div class="hb"><i style="height:45px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.448s both"></i></div>
+      <div class="hb"><i style="height:45px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.470s both"></i></div>
+      <div class="hb"><i style="height:60px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.492s both"></i></div>
+      <div class="hb"><i style="height:120px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.514s both"></i></div>
+      <div class="hb"><i style="height:150px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.536s both"></i></div>
+      <div class="hb hot"><i style="height:330px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.558s both"></i></div>
+      <div class="hb"><i style="height:105px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.580s both"></i></div>
+      <div class="hb"><i style="height:105px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.602s both"></i></div>
+      <div class="hb"><i style="height:105px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.624s both"></i></div>
+      <div class="hb"><i style="height:90px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.646s both"></i></div>
+      <div class="hb"><i style="height:45px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.668s both"></i></div>
+      <div class="hb"><i style="height:90px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.690s both"></i></div>
+      <div class="hb"><i style="height:30px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.712s both"></i></div>
+      <div class="hb"><i style="height:90px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.734s both"></i></div>
+      <div class="hb"><i style="height:60px;animation: rise .7s cubic-bezier(.16,1,.3,1) 3.756s both"></i></div>
+    </div>
+    <div class="axis">
+      <span style="left:2.08%">0시</span>
+      <span style="left:27.08%">6시</span>
+      <span style="left:52.08%">12시</span>
+      <span style="left:77.08%">18시</span>
+      <span class="last" style="left:100%">23시</span>
+    </div>
+    <div class="peak">↑ 오후 2시 · 22개</div>
+  </section>
+
+  <section id="c3" class="card abs">
+    <div class="kicker">낮 vs 새벽</div>
+    <div class="h sm">감성의 시간이<br>아니었다</div>
+    <div class="vs">
+      <div class="r day"><span class="t">낮 12~17시</span><span class="tk"><i></i></span><span class="n">61</span></div>
+      <div class="r dawn"><span class="t">새벽 0~5시</span><span class="tk"><i></i></span><span class="n">10</span></div>
+    </div>
+    <div class="note">낮 여섯 시간이 전체의 53%. 새벽은 8%뿐이었다</div>
+  </section>
+
+  <section id="c4" class="card abs">
+    <div class="kicker">그러니까</div>
+    <div class="h sm">저장은 <span class="hl">딴짓</span>이<br>아니었다</div>
+    <div class="sub">일하다 마주친 걸<br>놓치지 않으려고 담는 행동이었다.</div>
+    <div class="stat">
+      <div class="box win"><div class="nm">업무시간 9~18시</div><div class="vl">77</div><div class="un">116개 중 · 66%</div></div>
+    </div>
+  </section>
+
+  <section id="c5" class="card abs">
+    <div class="kicker">그래서 갈리는 지점</div>
+    <div class="h sm">이하다 담은 링크는<br><span class="hl">다시 찾게</span> 된다</div>
+    <div class="sub">새벽에 심심해서 담은 게 아니니까,<br>반드시 다시 꺼내야 하는 순간이 온다.</div>
+    <div class="note">그때 목록만 남아 있으면 그 저장은 없던 일이 된다</div>
+  </section>
+
+  <section id="c6" class="card abs">
+    <div class="h">담는 데 1초,<br><span class="hl">찾는 데도 1초</span><br>여야 합니다</div>
+    <div class="sub" style="color:rgba(255,255,255,.9)">제목·썸네일은 저절로,<br>폴더는 AI가 나눠요</div>
+    <div class="cta">붙여넣으면 1초, 정리는 AI가 🧺</div>
+    <div class="url">sokuri.app · 무료</div>
+  </section>
+
+  <div id="bar" class="abs"><i></i></div>
+  <div id="vig" class="abs"></div>
+</div>
+
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
