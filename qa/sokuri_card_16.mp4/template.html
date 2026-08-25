@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --ink:#0B0916; --yellow:#FFD84D; --red:#FF5C6B; --green:#4CD6A0; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #bg{inset:0;z-index:1;background:radial-gradient(1700px 1500px at 50% 16%, #241E45 0%, #0D0B18 68%);}
+  #bgpulse{inset:0;z-index:2;background:radial-gradient(900px 900px at 50% 34%, rgba(91,79,233,.30), transparent 70%);
+    animation: pulse 18s ease-in-out 0s both;}
+  @keyframes pulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.6} }
+  #brand{top:56px;left:60px;z-index:90;display:flex;align-items:center;gap:20px;}
+  #brand .ic{width:88px;height:88px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:50px;}
+  #brand .nm{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.01em;text-shadow:0 3px 14px rgba(0,0,0,.45);}
+  #pager{top:78px;right:60px;z-index:90;}
+  #pager span{position:absolute;top:0;right:0;white-space:nowrap;color:#B9B2E8;font-size:40px;font-weight:800;opacity:0;}
+  @keyframes pg{ 0%{opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{opacity:0} }
+  #bar{left:60px;right:60px;bottom:74px;height:12px;border-radius:99px;background:rgba(255,255,255,.14);z-index:90;overflow:hidden;}
+  #bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand2),var(--yellow));transform-origin:left center;
+    animation: fill 18s linear 0s both;}
+  @keyframes fill{ from{transform:scaleX(.02)} to{transform:scaleX(1)} }
+  .card{left:70px;right:70px;top:290px;bottom:200px;border-radius:52px;z-index:20;
+    background:linear-gradient(172deg,#1A1733 0%, #12101F 100%);
+    border:2.5px solid rgba(255,255,255,.10);
+    box-shadow:0 50px 130px rgba(0,0,0,.62);
+    padding:96px 78px; display:flex; flex-direction:column; justify-content:center;}
+  @keyframes card{
+    0%{opacity:0; transform:translateY(78px) scale(.945);}
+    9%{opacity:1; transform:translateY(0) scale(1);}
+    90%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-46px) scale(.985);}
+  }
+  #c1{z-index:21; animation: card 3s cubic-bezier(.16,1,.3,1)  0s both}
+  #c2{z-index:22; animation: card 3s cubic-bezier(.16,1,.3,1)  3s both}
+  #c3{z-index:23; animation: card 3s cubic-bezier(.16,1,.3,1)  6s both}
+  #c4{z-index:24; animation: card 3s cubic-bezier(.16,1,.3,1)  9s both}
+  #c5{z-index:25; animation: card 3s cubic-bezier(.16,1,.3,1) 12s both}
+  #c6{z-index:26; animation: card 3s cubic-bezier(.16,1,.3,1) 15s both}
+  .kicker{font-size:38px;font-weight:800;letter-spacing:.02em;color:var(--brand2);margin-bottom:34px;}
+  .h{font-size:88px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-.015em;word-break:keep-all;}
+  .h.sm{font-size:72px;}
+  .hl{color:var(--yellow);}
+  .sub{margin-top:40px;font-size:44px;font-weight:600;color:#A9A2D4;line-height:1.5;word-break:keep-all;}
+  .note{margin-top:34px;font-size:36px;font-weight:600;color:#8E87BA;line-height:1.45;word-break:keep-all;}
+  .big{margin-top:46px;text-align:center;}
+  .big .vl{font-size:120px;font-weight:900;color:var(--yellow);line-height:1.1;letter-spacing:-.02em;}
+  .big .un{margin-top:20px;font-size:44px;font-weight:800;color:#CFC9F0;line-height:1.4;word-break:keep-all;}
+  .stat{margin-top:44px;display:flex;gap:26px;}
+  .stat .box{flex:1;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
+    border-radius:30px;padding:36px 22px;text-align:center;}
+  .stat .nm{font-size:34px;font-weight:800;color:#B9B2E8;line-height:1.3;word-break:keep-all;}
+  .stat .vl{margin-top:16px;font-size:82px;font-weight:900;color:var(--yellow);line-height:1;}
+  .stat .un{margin-top:12px;font-size:32px;font-weight:700;color:#9C95C8;}
+  .list{margin-top:40px;display:flex;flex-direction:column;gap:22px;}
+  .list div{font-size:46px;font-weight:700;color:#F0EDFF;background:rgba(139,125,255,.14);
+    border-left:10px solid var(--brand2);border-radius:20px;padding:24px 30px;word-break:keep-all;}
+  #c1{align-items:center;text-align:center;}
+  #c1 .emo{font-size:170px;margin-bottom:12px;}
+  #c6{background:linear-gradient(158deg,var(--brand2) -12%,var(--brand) 36%, var(--deep) 100%);
+    border-color:rgba(255,255,255,.22);align-items:center;text-align:center;}
+  #c6 .h{font-size:84px;line-height:1.26;}
+  #c6 .cta{margin-top:56px;font-size:46px;font-weight:800;color:#1A1440;background:var(--yellow);
+    border-radius:99px;padding:26px 52px;display:inline-block;}
+  #c6 .url{margin-top:38px;font-size:40px;font-weight:700;color:rgba(255,255,255,.86);}
+  #vig{inset:0;z-index:95;pointer-events:none;
+    background:radial-gradient(1250px 1250px at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <div id="bgpulse" class="abs"></div>
+  <div id="brand" class="abs"><div class="ic">🧺</div><div class="nm">소쿠리</div></div>
+  <div id="pager" class="abs">
+    <span style="animation: pg 3s linear  0s both">1 / 6</span>
+    <span style="animation: pg 3s linear  3s both">2 / 6</span>
+    <span style="animation: pg 3s linear  6s both">3 / 6</span>
+    <span style="animation: pg 3s linear  9s both">4 / 6</span>
+    <span style="animation: pg 3s linear 12s both">5 / 6</span>
+    <span style="animation: pg 3s linear 15s both">6 / 6</span>
+  </div>
+
+  <section id="c1" class="card abs">
+    <div class="emo">🫠</div>
+    <div class="h">AI로 <span class="hl">3분</span> 만에<br>쓴 문서 한 장,<br>받은 사람은<br><span class="hl">2시간</span>을 쓴다</div>
+    <div class="sub">'워크슬롭(workslop)' · 하버드비즈니스리뷰 2025.9</div>
+  </section>
+
+  <section id="c2" class="card abs">
+    <div class="kicker">워크슬롭이란</div>
+    <div class="h sm">겉은 그럴듯한데<br><span class="hl">알맹이가 없는</span><br>AI 결과물</div>
+    <div class="sub">내가 안 한 생각을<br>받는 사람에게 떠넘기는 문서.<br>미국 사무직 <b style="color:#fff">40%</b>가<br>최근 한 달 안에 받았다.</div>
+    <div class="note">스탠퍼드 소셜미디어랩 × 베터업 랩스, 사무직 1,150명 조사</div>
+  </section>
+
+  <section id="c3" class="card abs">
+    <div class="kicker">치워주는 비용</div>
+    <div class="stat">
+      <div class="box"><div class="nm">한 건 다시 만드는<br>평균 시간</div><div class="vl">2</div><div class="un">시간</div></div>
+      <div class="box"><div class="nm">받은 사람<br>1인당 월 손실</div><div class="vl">186</div><div class="un">달러</div></div>
+    </div>
+    <div class="sub">1만 명 규모 회사로 환산하면<br>연 <b style="color:#FFD84D">900만 달러</b>가 그냥 샌다.</div>
+    <div class="note">베터업 랩스 추산 · 워크슬롭을 받은 직원 기준</div>
+  </section>
+
+  <section id="c4" class="card abs">
+    <div class="kicker">그런데 진짜 손해는</div>
+    <div class="h sm">시간이 아니라<br><span class="hl">내 평판</span>이다</div>
+    <div class="big">
+      <div class="vl">42%</div>
+      <div class="un">"그 동료를 전보다 덜 믿게 됐다"</div>
+    </div>
+    <div class="note">3분의 1 이상은 보낸 사람을 "덜 창의적이고 덜 똑똑하다"고 답했다</div>
+  </section>
+
+  <section id="c5" class="card abs">
+    <div class="kicker">그래서 현실은</div>
+    <div class="h sm">신입만 만드는 게<br>아니다</div>
+    <div class="list">
+      <div>👔 16%는 <b>관리자가</b> 만들어 내려보낸 것</div>
+      <div>📮 18%는 부하 직원이 <b>상사에게</b> 올린 것</div>
+    </div>
+    <div class="note">HBR 후속 연구(2026.1)는 원인을 개인 게으름이 아니라 "모호한 AI 도입 지시 + 소진된 팀"으로 지목했다</div>
+  </section>
+
+  <section id="c6" class="card abs">
+    <div class="h">AI는 초안까지.<br><span class="hl">근거는 내가</span> 붙인다</div>
+    <div class="sub" style="color:rgba(255,255,255,.9)">그 근거, 찾을 때마다<br>매번 처음부터 검색하고 있다면<br>그게 진짜 낭비다.</div>
+    <div class="cta">붙여넣으면 1초, 정리는 AI가 🧺</div>
+    <div class="url">sokuri.app · 무료</div>
+  </section>
+
+  <div id="bar" class="abs"><i></i></div>
+  <div id="vig" class="abs"></div>
+</div>
+
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
