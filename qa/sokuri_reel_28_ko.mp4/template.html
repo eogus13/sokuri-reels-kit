@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --ink:#0B0916; --yellow:#FFD84D; --red:#FF5C6B; --green:#4CD6A0; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #bg{inset:0;z-index:1;background:radial-gradient(1700px 1500px at 50% 16%, #241E45 0%, #0D0B18 68%);}
+  #bgpulse{inset:0;z-index:2;background:radial-gradient(900px 900px at 50% 34%, rgba(91,79,233,.30), transparent 70%);
+    animation: pulse 18s ease-in-out 0s both;}
+  @keyframes pulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.6} }
+  #brand{top:56px;left:60px;z-index:90;display:flex;align-items:center;gap:20px;}
+  #brand .ic{width:88px;height:88px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:50px;}
+  #brand .nm{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.01em;text-shadow:0 3px 14px rgba(0,0,0,.45);}
+  #pager{top:78px;right:60px;z-index:90;}
+  #pager span{position:absolute;top:0;right:0;white-space:nowrap;color:#B9B2E8;font-size:40px;font-weight:800;opacity:0;}
+  @keyframes pg{ 0%{opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{opacity:0} }
+  #bar{left:60px;right:60px;bottom:74px;height:12px;border-radius:99px;background:rgba(255,255,255,.14);z-index:90;overflow:hidden;}
+  #bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand2),var(--yellow));transform-origin:left center;
+    animation: fill 18s linear 0s both;}
+  @keyframes fill{ from{transform:scaleX(.02)} to{transform:scaleX(1)} }
+  .card{left:70px;right:70px;top:290px;bottom:200px;border-radius:52px;z-index:20;
+    background:linear-gradient(172deg,#1A1733 0%, #12101F 100%);
+    border:2.5px solid rgba(255,255,255,.10);
+    box-shadow:0 50px 130px rgba(0,0,0,.62);
+    padding:96px 78px; display:flex; flex-direction:column; justify-content:center;}
+  @keyframes card{
+    0%{opacity:0; transform:translateY(78px) scale(.945);}
+    9%{opacity:1; transform:translateY(0) scale(1);}
+    90%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-46px) scale(.985);}
+  }
+  #c1{z-index:21; animation: card 3s cubic-bezier(.16,1,.3,1)  0s both}
+  #c2{z-index:22; animation: card 3s cubic-bezier(.16,1,.3,1)  3s both}
+  #c3{z-index:23; animation: card 3s cubic-bezier(.16,1,.3,1)  6s both}
+  #c4{z-index:24; animation: card 3s cubic-bezier(.16,1,.3,1)  9s both}
+  #c5{z-index:25; animation: card 3s cubic-bezier(.16,1,.3,1) 12s both}
+  #c6{z-index:26; animation: card 3s cubic-bezier(.16,1,.3,1) 15s both}
+  .kicker{font-size:38px;font-weight:800;letter-spacing:.02em;color:var(--brand2);margin-bottom:34px;}
+  .h{font-size:88px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-.015em;word-break:keep-all;}
+  .h.sm{font-size:72px;}
+  .hl{color:var(--yellow);}
+  .sub{margin-top:40px;font-size:44px;font-weight:600;color:#A9A2D4;line-height:1.5;word-break:keep-all;}
+  .note{margin-top:34px;font-size:32px;font-weight:600;color:#8E87BA;line-height:1.45;word-break:keep-all;}
+  .big{margin-top:30px;font-size:210px;font-weight:900;color:var(--yellow);line-height:1;letter-spacing:-.03em;}
+  .list{margin-top:40px;display:flex;flex-direction:column;gap:22px;}
+  .list div{font-size:42px;font-weight:700;color:#F0EDFF;background:rgba(139,125,255,.14);
+    border-left:10px solid var(--brand2);border-radius:20px;padding:24px 30px;word-break:keep-all;}
+  .tabs{margin-top:44px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center;}
+  .tabs i{display:block;width:104px;height:30px;border-radius:9px 9px 0 0;background:rgba(255,255,255,.16);font-style:normal;}
+  .tabs i:nth-child(3n){background:rgba(139,125,255,.34);}
+  .tabs i:nth-child(5n){background:rgba(255,216,77,.30);}
+  #c1{align-items:center;text-align:center;}
+  #c1 .emo{font-size:132px;margin-bottom:10px;}
+  #c6{background:linear-gradient(158deg,var(--brand2) -12%,var(--brand) 36%, var(--deep) 100%);
+    border-color:rgba(255,255,255,.22);align-items:center;text-align:center;}
+  #c6 .h{font-size:84px;line-height:1.26;}
+  #c6 .cta{margin-top:56px;font-size:46px;font-weight:800;color:#1A1440;background:var(--yellow);
+    border-radius:99px;padding:26px 52px;display:inline-block;}
+  #c6 .url{margin-top:38px;font-size:40px;font-weight:700;color:rgba(255,255,255,.86);}
+  #vig{inset:0;z-index:95;pointer-events:none;
+    background:radial-gradient(1250px 1250px at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <div id="bgpulse" class="abs"></div>
+  <div id="brand" class="abs"><div class="ic">&#129506;</div><div class="nm">소쿠리</div></div>
+  <div id="pager" class="abs">
+    <span style="animation: pg 3s linear  0s both">1 / 6</span>
+    <span style="animation: pg 3s linear  3s both">2 / 6</span>
+    <span style="animation: pg 3s linear  6s both">3 / 6</span>
+    <span style="animation: pg 3s linear  9s both">4 / 6</span>
+    <span style="animation: pg 3s linear 12s both">5 / 6</span>
+    <span style="animation: pg 3s linear 15s both">6 / 6</span>
+  </div>
+
+  <section id="c1" class="card abs">
+    <div class="emo">&#128209;</div>
+    <div class="h">탭 47개,<br>왜 <span class="hl">하나도</span><br>못 닫을까?</div>
+    <div class="tabs"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="sub">카네기멜런대가<br>이름 붙인 그 현상</div>
+  </section>
+
+  <section id="c2" class="card abs">
+    <div class="kicker">먼저, 숫자 하나</div>
+    <div class="h sm">참가자 <span class="hl">4명 중 1명</span>은</div>
+    <div class="big">25%</div>
+    <div class="sub">탭이 너무 많아서<br>브라우저나 컴퓨터가<br>멈춘 적이 있다고 답했다</div>
+  </section>
+
+  <section id="c3" class="card abs">
+    <div class="kicker">그런데 왜 못 닫을까</div>
+    <div class="h sm">의지가 약해서가<br><span class="hl">아니었다</span></div>
+    <div class="sub">연구팀이 인터뷰에서<br>반복해서 들은 대답은<br>전부 같은 모양이었다.</div>
+    <div class="note">Chang·Myers 외, 「When the Tab Comes Due」, CHI 2021 (카네기멜런대 HCII)</div>
+  </section>
+
+  <section id="c4" class="card abs">
+    <div class="kicker">연구팀이 붙인 이름</div>
+    <div class="h"><span class="hl">블랙홀</span> 효과</div>
+    <div class="sub">닫는 순간 그 정보는<br>영영 못 찾을 것 같다.<br>그래서 안 닫는 게 아니라<br><b style="color:#fff">못</b> 닫는다.</div>
+  </section>
+
+  <section id="c5" class="card abs">
+    <div class="kicker">그래서 해법은 하나</div>
+    <div class="h sm">탭을 줄이는 게 아니라<br>닫아도 <span class="hl">안 사라지는</span><br>자리를 만드는 것</div>
+    <div class="list">
+      <div>&#128203; 붙여넣으면 1초 저장</div>
+      <div>&#10024; 제목·썸네일 자동 채움</div>
+      <div>&#128193; 폴더는 AI가 분류</div>
+    </div>
+  </section>
+
+  <section id="c6" class="card abs">
+    <div class="h">이제 그 탭,<br><span class="hl">닫아도 됩니다</span></div>
+    <div class="sub" style="color:rgba(255,255,255,.9)">붙여넣는 순간<br>제목·썸네일이 채워지고<br>폴더는 AI가 나눠요 &#129506;</div>
+    <div class="cta">1초 저장 · 정리는 AI가</div>
+    <div class="url">sokuri.app · 무료</div>
+  </section>
+
+  <div id="bar" class="abs"><i></i></div>
+  <div id="vig" class="abs"></div>
+</div>
+
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
