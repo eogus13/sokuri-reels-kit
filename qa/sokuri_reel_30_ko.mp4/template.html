@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root{ --brand:#5B4FE9; --brand2:#8B7DFF; --deep:#2E2780; --ink:#0B0916; --yellow:#FFD84D; --red:#FF5C6B; --green:#4CD6A0; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);
+    font-family:'Noto Sans CJK KR','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;}
+  .abs{position:absolute;}
+  #bg{inset:0;z-index:1;background:radial-gradient(1700px 1500px at 50% 16%, #241E45 0%, #0D0B18 68%);}
+  #bgpulse{inset:0;z-index:2;background:radial-gradient(900px 900px at 50% 34%, rgba(91,79,233,.30), transparent 70%);
+    animation: pulse 18s ease-in-out 0s both;}
+  @keyframes pulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.6} }
+  #brand{top:56px;left:60px;z-index:90;display:flex;align-items:center;gap:20px;}
+  #brand .ic{width:88px;height:88px;border-radius:26px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:50px;}
+  #brand .nm{color:#fff;font-size:42px;font-weight:800;letter-spacing:-.01em;text-shadow:0 3px 14px rgba(0,0,0,.45);}
+  #pager{top:78px;right:60px;z-index:90;}
+  #pager span{position:absolute;top:0;right:0;white-space:nowrap;color:#B9B2E8;font-size:40px;font-weight:800;opacity:0;}
+  @keyframes pg{ 0%{opacity:0} 6%{opacity:1} 94%{opacity:1} 100%{opacity:0} }
+  #bar{left:60px;right:60px;bottom:74px;height:12px;border-radius:99px;background:rgba(255,255,255,.14);z-index:90;overflow:hidden;}
+  #bar i{display:block;height:100%;width:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand2),var(--yellow));transform-origin:left center;
+    animation: fill 18s linear 0s both;}
+  @keyframes fill{ from{transform:scaleX(.02)} to{transform:scaleX(1)} }
+  .card{left:70px;right:70px;top:290px;bottom:200px;border-radius:52px;z-index:20;
+    background:linear-gradient(172deg,#1A1733 0%, #12101F 100%);
+    border:2.5px solid rgba(255,255,255,.10);
+    box-shadow:0 50px 130px rgba(0,0,0,.62);
+    padding:96px 78px; display:flex; flex-direction:column; justify-content:center;}
+  @keyframes card{
+    0%{opacity:0; transform:translateY(78px) scale(.945);}
+    9%{opacity:1; transform:translateY(0) scale(1);}
+    90%{opacity:1; transform:translateY(0) scale(1);}
+    100%{opacity:0; transform:translateY(-46px) scale(.985);}
+  }
+  #c1{z-index:21; animation: card 3s cubic-bezier(.16,1,.3,1)  0s both}
+  #c2{z-index:22; animation: card 3s cubic-bezier(.16,1,.3,1)  3s both}
+  #c3{z-index:23; animation: card 3s cubic-bezier(.16,1,.3,1)  6s both}
+  #c4{z-index:24; animation: card 3s cubic-bezier(.16,1,.3,1)  9s both}
+  #c5{z-index:25; animation: card 3s cubic-bezier(.16,1,.3,1) 12s both}
+  #c6{z-index:26; animation: card 3s cubic-bezier(.16,1,.3,1) 15s both}
+  .kicker{font-size:38px;font-weight:800;letter-spacing:.02em;color:var(--brand2);margin-bottom:34px;}
+  .h{font-size:88px;font-weight:900;color:#fff;line-height:1.28;letter-spacing:-.015em;word-break:keep-all;}
+  .h.sm{font-size:72px;}
+  .hl{color:var(--yellow);}
+  .sub{margin-top:40px;font-size:44px;font-weight:600;color:#A9A2D4;line-height:1.5;word-break:keep-all;}
+  .note{margin-top:34px;font-size:32px;font-weight:600;color:#8E87BA;line-height:1.45;word-break:keep-all;}
+  .stat{margin-top:44px;display:flex;gap:26px;}
+  .stat .box{flex:1;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.12);
+    border-radius:30px;padding:36px 22px;text-align:center;}
+  .stat .nm{font-size:33px;font-weight:800;color:#B9B2E8;line-height:1.3;word-break:keep-all;}
+  .stat .vl{margin-top:18px;font-size:76px;font-weight:900;color:var(--yellow);line-height:1.15;}
+  .stat .un{margin-top:12px;font-size:31px;font-weight:700;color:#9C95C8;word-break:keep-all;}
+  .stat .box.dim .vl{color:#CFC9F0;}
+  .stat .box.win{background:rgba(76,214,160,.12);border-color:rgba(76,214,160,.42);}
+  .stat .box.win .vl{color:var(--green);}
+  .list{margin-top:40px;display:flex;flex-direction:column;gap:22px;}
+  .list div{font-size:44px;font-weight:700;color:#F0EDFF;background:rgba(139,125,255,.14);
+    border-left:10px solid var(--brand2);border-radius:20px;padding:24px 30px;word-break:keep-all;}
+  #c1{align-items:center;text-align:center;}
+  #c1 .emo{font-size:150px;margin-bottom:16px;}
+  #c6{background:linear-gradient(158deg,var(--brand2) -12%,var(--brand) 36%, var(--deep) 100%);
+    border-color:rgba(255,255,255,.22);align-items:center;text-align:center;}
+  #c6 .h{font-size:84px;line-height:1.26;}
+  #c6 .cta{margin-top:56px;font-size:46px;font-weight:800;color:#1A1440;background:var(--yellow);
+    border-radius:99px;padding:26px 52px;display:inline-block;}
+  #c6 .url{margin-top:38px;font-size:40px;font-weight:700;color:rgba(255,255,255,.86);}
+  #vig{inset:0;z-index:95;pointer-events:none;
+    background:radial-gradient(1250px 1250px at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="abs"></div>
+  <div id="bgpulse" class="abs"></div>
+  <div id="brand" class="abs"><div class="ic">&#129506;</div><div class="nm">소쿠리</div></div>
+  <div id="pager" class="abs">
+    <span style="animation: pg 3s linear  0s both">1 / 6</span>
+    <span style="animation: pg 3s linear  3s both">2 / 6</span>
+    <span style="animation: pg 3s linear  6s both">3 / 6</span>
+    <span style="animation: pg 3s linear  9s both">4 / 6</span>
+    <span style="animation: pg 3s linear 12s both">5 / 6</span>
+    <span style="animation: pg 3s linear 15s both">6 / 6</span>
+  </div>
+
+  <section id="c1" class="card abs">
+    <div class="emo">&#129387;</div>
+    <div class="h">저장한 링크 372개<br>오늘 연 건 <span class="hl">0개</span></div>
+    <div class="sub">게을러서가 아닙니다.<br>2000년 잼 실험이<br>이유를 알려줍니다</div>
+  </section>
+
+  <section id="c2" class="card abs">
+    <div class="kicker">실험은 이랬다</div>
+    <div class="h sm">한 슈퍼마켓에<br>잼 시식대를 <span class="hl">두 개</span> 놓았다</div>
+    <div class="stat">
+      <div class="box"><div class="nm">A 시식대</div><div class="vl">24종</div><div class="un">골라 먹기</div></div>
+      <div class="box dim"><div class="nm">B 시식대</div><div class="vl">6종</div><div class="un">골라 먹기</div></div>
+    </div>
+    <div class="note">Iyengar &amp; Lepper, 「When Choice Is Demotivating」, JPSP, 2000</div>
+  </section>
+
+  <section id="c3" class="card abs">
+    <div class="kicker">발길은 많은 쪽으로</div>
+    <div class="h sm">24종 앞에 <span class="hl">60%</span>가<br>멈춰 섰다</div>
+    <div class="sub">6종 앞엔 40%.<br>선택지가 많을수록<br>눈길은 확실히 끌었다.</div>
+  </section>
+
+  <section id="c4" class="card abs">
+    <div class="kicker">그런데 실제로 산 사람은</div>
+    <div class="h sm">정반대였다</div>
+    <div class="stat">
+      <div class="box"><div class="nm">24종을<br>본 사람</div><div class="vl">3%</div><div class="un">구매</div></div>
+      <div class="box win"><div class="nm">6종만<br>본 사람</div><div class="vl">30%</div><div class="un">구매</div></div>
+    </div>
+    <div class="sub">10배 차이. 고를 게 너무 많으면<br>사람은 <b style="color:#fff">고르기를 그만둔다.</b></div>
+  </section>
+
+  <section id="c5" class="card abs">
+    <div class="kicker">저장함도 똑같다</div>
+    <div class="h sm">내 저장함은<br>24종이 아니라<br><span class="hl">372종</span>이다</div>
+    <div class="list">
+      <div>&#128241; 인스타 저장 탭</div>
+      <div>&#128172; 카톡 나에게 보내기</div>
+      <div>&#128278; 북마크 400개 어딘가</div>
+      <div>&#128193; 못 닫은 탭 47개</div>
+    </div>
+  </section>
+
+  <section id="c6" class="card abs">
+    <div class="h">372개를<br><span class="hl">여섯 칸</span>으로<br>줄여주면 된다</div>
+    <div class="sub" style="color:rgba(255,255,255,.9)">붙여넣는 순간<br>제목·썸네일이 채워지고<br>폴더는 AI가 나눠요 &#129506;</div>
+    <div class="cta">1초 저장 · 정리는 AI가</div>
+    <div class="url">sokuri.app · 무료</div>
+  </section>
+
+  <div id="bar" class="abs"><i></i></div>
+  <div id="vig" class="abs"></div>
+</div>
+
+<script>
+window.seek = function(ms){ document.getAnimations().forEach(a=>{ a.pause(); a.currentTime = ms; }); };
+window.seek(0);
+</script>
+</body>
+</html>
